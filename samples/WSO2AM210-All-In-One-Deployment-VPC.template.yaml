@@ -10,6 +10,7 @@ Metadata:
         'y': 60
       z: 0
       embeds:
+        - d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0
         - 881a879f-334b-44b2-a19d-7701040a74ce
         - 09193d5d-58c0-4cce-a676-ea591bd30369
         - 032a837f-0f0b-43a2-9144-cdbc8513784d
@@ -144,8 +145,10 @@ Metadata:
         - ef3ca602-1007-47bc-9293-5cca49d53f21
       ismemberof:
         - 41b0200f-ebf7-4cf8-ad86-99a4f73f3dbd
+        - d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0
       dependson:
         - 41b0200f-ebf7-4cf8-ad86-99a4f73f3dbd
+        - d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0
     65da796e-ebf4-4f00-805e-39a1f1a2bed7:
       source:
         id: 171facf8-bab4-4789-b201-e3d445f117b0
@@ -177,8 +180,10 @@ Metadata:
         - ef3ca602-1007-47bc-9293-5cca49d53f21
       ismemberof:
         - 41b0200f-ebf7-4cf8-ad86-99a4f73f3dbd
+        - d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0
       dependson:
         - 41b0200f-ebf7-4cf8-ad86-99a4f73f3dbd
+        - d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0
     f8993a34-8aca-4e86-99a9-208b6564d768:
       source:
         id: 3d48385a-4026-4756-9c61-e6b537d1e643
@@ -270,8 +275,8 @@ Metadata:
       z: 1
       parent: fb20a365-0148-466d-800c-826524d09381
       embeds:
-        - c925ee1d-c510-4b97-a2ee-906c7f10d17c
         - d32877e1-c627-422c-8e9e-c00cf848696a
+        - c925ee1d-c510-4b97-a2ee-906c7f10d17c
     09193d5d-58c0-4cce-a676-ea591bd30369:
       size:
         width: 270
@@ -414,6 +419,8 @@ Metadata:
       embeds: []
       ismemberof:
         - 41b0200f-ebf7-4cf8-ad86-99a4f73f3dbd
+      references:
+        - b65bf2e8-8b93-4b29-ba6b-f2c51ef71840
     c925ee1d-c510-4b97-a2ee-906c7f10d17c:
       size:
         width: 60
@@ -426,6 +433,8 @@ Metadata:
       embeds: []
       ismemberof:
         - 41b0200f-ebf7-4cf8-ad86-99a4f73f3dbd
+      references:
+        - b65bf2e8-8b93-4b29-ba6b-f2c51ef71840
     dba8ff6a-8e80-4973-81b0-f24285d9848b:
       size:
         width: 60
@@ -450,6 +459,32 @@ Metadata:
       z: 2
       parent: 032a837f-0f0b-43a2-9144-cdbc8513784d
       embeds: []
+      ismemberof:
+        - 41b0200f-ebf7-4cf8-ad86-99a4f73f3dbd
+      references:
+        - 6a8376f1-62eb-4088-882a-386f7435aeca
+    d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 850
+        'y': 250
+      z: 1
+      parent: fb20a365-0148-466d-800c-826524d09381
+      embeds: []
+    95f4544b-0c99-477d-b5d0-95d8e3cee770:
+      source:
+        id: 171facf8-bab4-4789-b201-e3d445f117b0
+      target:
+        id: d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0
+      z: 3
+    f8262118-2c20-419a-a458-faf14bf1de07:
+      source:
+        id: 3d48385a-4026-4756-9c61-e6b537d1e643
+      target:
+        id: d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0
+      z: 4
 Resources:
   WSO2AMVPC:
     Type: 'AWS::EC2::VPC'
@@ -487,91 +522,7 @@ Resources:
     Properties:
       VpcId: !Ref WSO2AMVPC
       GroupDescription: Product Security Group
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '2049'
-          ToPort: '2049'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9443'
-          ToPort: '9443'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5701'
-          ToPort: '5701'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9763'
-          ToPort: '9763'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '8243'
-          ToPort: '8243'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '8280'
-          ToPort: '8280'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '80'
-          ToPort: '80'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '3306'
-          ToPort: '3306'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: ICMP
-          FromPort: '-1'
-          ToPort: '-1'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '3306'
-          ToPort: '3306'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '10389'
-          ToPort: '10389'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '8000'
-          ToPort: '8000'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5701'
-          ToPort: '5701'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5672'
-          ToPort: '5672'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9611'
-          ToPort: '9611'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9711'
-          ToPort: '9711'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '10397'
-          ToPort: '10397'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '7611'
-          ToPort: '7611'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '7711'
-          ToPort: '7711'
-          CidrIp: 0.0.0.0/0
+      # TODO: attach security group
       SecurityGroupEgress:
         - IpProtocol: -1
           FromPort: '0'
@@ -612,7 +563,7 @@ Resources:
     Properties:
       CrossZone: true
       SecurityGroups:
-        - !Ref ProductSecurityGroup
+        - !Ref ELBSecurityGroup
       Subnets:
         - !Ref PublicSubnet
       LBCookieStickinessPolicy:
@@ -688,13 +639,13 @@ Resources:
       'AWS::CloudFormation::Designer':
         id: 171facf8-bab4-4789-b201-e3d445f117b0
     DependsOn:
-      - ProductSecurityGroup
+      - ELBSecurityGroup
   WSO2AMAnalyticsELB:
     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
     Properties:
       CrossZone: true
       SecurityGroups:
-        - !Ref ProductSecurityGroup
+        - !Ref ELBSecurityGroup
       Subnets:
         - !Ref PublicSubnet
       LBCookieStickinessPolicy:
@@ -762,7 +713,7 @@ Resources:
       'AWS::CloudFormation::Designer':
         id: 3d48385a-4026-4756-9c61-e6b537d1e643
     DependsOn:
-      - ProductSecurityGroup
+      - ELBSecurityGroup
   WSO2AMDBSubnetGroup:
     Type: 'AWS::RDS::DBSubnetGroup'
     Properties:
@@ -936,6 +887,100 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: d32877e1-c627-422c-8e9e-c00cf848696a
+  ELBSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+      GroupDescription: ELB Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '2049'
+          ToPort: '2049'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8243'
+          ToPort: '8243'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8280'
+          ToPort: '8280'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '3306'
+          ToPort: '3306'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: ICMP
+          FromPort: '-1'
+          ToPort: '-1'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '3306'
+          ToPort: '3306'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10389'
+          ToPort: '10389'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8000'
+          ToPort: '8000'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5672'
+          ToPort: '5672'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9611'
+          ToPort: '9611'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9711'
+          ToPort: '9711'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10397'
+          ToPort: '10397'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '7611'
+          ToPort: '7611'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '7711'
+          ToPort: '7711'
+          CidrIp: 0.0.0.0/0
+      # TODO: add listeners
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d6ce380c-41c7-43d7-9ce1-7062f4e1e6c0
 Parameters:
   KeyPairName:
     Description: >-
