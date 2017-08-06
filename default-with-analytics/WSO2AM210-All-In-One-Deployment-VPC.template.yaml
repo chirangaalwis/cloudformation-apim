@@ -42,7 +42,6 @@ Resources:
         - !GetAZs ''
   PublicInternetGateway:
     Type: 'AWS::EC2::InternetGateway'
-    Properties: {}
   PublicRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -54,6 +53,8 @@ Resources:
       SubnetId: !Ref PublicSubnet
   PublicRoute:
     Type: 'AWS::EC2::Route'
+    DependsOn:
+      - EC2VPCG1W38G
     Properties:
       RouteTableId: !Ref PublicRouteTable
       GatewayId: !Ref PublicInternetGateway
