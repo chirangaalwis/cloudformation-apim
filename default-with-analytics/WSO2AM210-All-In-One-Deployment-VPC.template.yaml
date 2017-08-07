@@ -94,6 +94,266 @@ Resources:
       AvailabilityZone: !Select
         - '1'
         - !GetAZs ''
+  WSO2AMELB:
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    Properties:
+      CrossZone: true
+      SecurityGroups:
+        - !Ref ELBSecurityGroup
+      Subnets:
+        - !Ref PublicSubnet
+        - !Ref PublicSubnet2
+      LBCookieStickinessPolicy:
+        - PolicyName: LBStickyPolicy
+      Listeners:
+        - LoadBalancerPort: '9443'
+          InstancePort: '9443'
+          Protocol: HTTPS
+          InstanceProtocol: HTTPS
+          PolicyNames:
+            - LBStickyPolicy
+          SSLCertificateId: !Join
+            - ''
+            - - 'arn:aws:iam::'
+              - !Ref 'AWS::AccountId'
+              - ':server-certificate'
+              - /
+              - !Ref CertificateName
+        - LoadBalancerPort: '8243'
+          InstancePort: '8243'
+          Protocol: HTTPS
+          InstanceProtocol: HTTPS
+          PolicyNames:
+            - LBStickyPolicy
+          SSLCertificateId: !Join
+            - ''
+            - - 'arn:aws:iam::'
+              - !Ref 'AWS::AccountId'
+              - ':server-certificate'
+              - /
+              - !Ref CertificateName
+        - LoadBalancerPort: '9763'
+          InstancePort: '9763'
+          Protocol: HTTP
+          InstanceProtocol: HTTP
+          PolicyNames:
+            - LBStickyPolicy
+        - LoadBalancerPort: '10389'
+          InstancePort: '10389'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '8000'
+          InstancePort: '8000'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '5701'
+          InstancePort: '5701'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '5672'
+          InstancePort: '5672'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '9611'
+          InstancePort: '9611'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '9711'
+          InstancePort: '9711'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '10397'
+          InstancePort: '10397'
+          Protocol: TCP
+          InstanceProtocol: TCP
+      HealthCheck:
+          Target: 'TCP:9763'
+          HealthyThreshold: '3'
+          UnhealthyThreshold: '5'
+          Interval: '10'
+          Timeout: '5'
+  ELBSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      GroupDescription: ELB Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8243'
+          ToPort: '8243'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10389'
+          ToPort: '10389'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8000'
+          ToPort: '8000'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5672'
+          ToPort: '5672'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9611'
+          ToPort: '9611'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9711'
+          ToPort: '9711'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10397'
+          ToPort: '10397'
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8243'
+          ToPort: '8243'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10389'
+          ToPort: '10389'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8000'
+          ToPort: '8000'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5672'
+          ToPort: '5672'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9611'
+          ToPort: '9611'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9711'
+          ToPort: '9711'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10397'
+          ToPort: '10397'
+          CidrIp: 0.0.0.0/0
+  ProductSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      GroupDescription: Product Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '2049'
+          ToPort: '2049'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '8243'
+          ToPort: '8243'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '8280'
+          ToPort: '8280'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '3306'
+          ToPort: '3306'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: icmp
+          FromPort: '-1'
+          ToPort: '-1'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '3306'
+          ToPort: '3306'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '10389'
+          ToPort: '10389'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '8000'
+          ToPort: '8000'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '5672'
+          ToPort: '5672'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '9611'
+          ToPort: '9611'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '9711'
+          ToPort: '9711'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '10397'
+          ToPort: '10397'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '7611'
+          ToPort: '7611'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '7711'
+          ToPort: '7711'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: '0'
+          ToPort: '0'
+          CidrIp: 0.0.0.0/0
   WSO2AMLC:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
     Properties:
@@ -237,93 +497,6 @@ Resources:
       - ProductSecurityGroup
       - WSO2AMELB
       - EC2VPCG1W38G
-  ProductSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: Product Security Group
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '2049'
-          ToPort: '2049'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9443'
-          ToPort: '9443'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5701'
-          ToPort: '5701'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9763'
-          ToPort: '9763'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '8243'
-          ToPort: '8243'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '8280'
-          ToPort: '8280'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '80'
-          ToPort: '80'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '3306'
-          ToPort: '3306'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: ICMP
-          FromPort: '-1'
-          ToPort: '-1'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '3306'
-          ToPort: '3306'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '10389'
-          ToPort: '10389'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '8000'
-          ToPort: '8000'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5701'
-          ToPort: '5701'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5672'
-          ToPort: '5672'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9611'
-          ToPort: '9611'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9711'
-          ToPort: '9711'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '10397'
-          ToPort: '10397'
-          CidrIp: 0.0.0.0/0
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          FromPort: '0'
-          ToPort: '0'
-          CidrIp: 0.0.0.0/0
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
 #  WSO2AMASGroupSN1:
 #    Type: 'AWS::AutoScaling::AutoScalingGroup'
 #    Properties:
@@ -386,86 +559,6 @@ Resources:
 #    Metadata:
 #      'AWS::CloudFormation::Designer':
 #        id: d342cd60-ac6a-47de-a209-dbd7aaa8f1ce
-  WSO2AMELB:
-    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
-    Properties:
-      CrossZone: true
-      SecurityGroups:
-        - !Ref ProductSecurityGroup
-      Subnets:
-        - !Ref PublicSubnet2
-        - !Ref PublicSubnet
-      LBCookieStickinessPolicy:
-        - PolicyName: LBStickyPolicy
-      Listeners:
-        - LoadBalancerPort: '9443'
-          InstancePort: '9443'
-          Protocol: HTTPS
-          InstanceProtocol: HTTPS
-          PolicyNames:
-            - LBStickyPolicy
-          SSLCertificateId: !Join
-            - ''
-            - - 'arn:aws:iam::'
-              - !Ref 'AWS::AccountId'
-              - ':server-certificate'
-              - /
-              - !Ref CertificateName
-        - LoadBalancerPort: '8243'
-          InstancePort: '8243'
-          Protocol: HTTPS
-          InstanceProtocol: HTTPS
-          PolicyNames:
-            - LBStickyPolicy
-          SSLCertificateId: !Join
-            - ''
-            - - 'arn:aws:iam::'
-              - !Ref 'AWS::AccountId'
-              - ':server-certificate'
-              - /
-              - !Ref CertificateName
-        - LoadBalancerPort: '9763'
-          InstancePort: '9763'
-          Protocol: HTTP
-          InstanceProtocol: HTTP
-          PolicyNames:
-            - LBStickyPolicy
-        - LoadBalancerPort: '10389'
-          InstancePort: '10389'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '8000'
-          InstancePort: '8000'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '5701'
-          InstancePort: '5701'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '5672'
-          InstancePort: '5672'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '9611'
-          InstancePort: '9611'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '9711'
-          InstancePort: '9711'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '10397'
-          InstancePort: '10397'
-          Protocol: TCP
-          InstanceProtocol: TCP
-      HealthCheck:
-        Target: 'TCP:9763'
-        HealthyThreshold: '3'
-        UnhealthyThreshold: '5'
-        Interval: '10'
-        Timeout: '5'
-    DependsOn:
-      - ProductSecurityGroup
   WSO2AMELBThriftSN1:
     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
     Properties:
