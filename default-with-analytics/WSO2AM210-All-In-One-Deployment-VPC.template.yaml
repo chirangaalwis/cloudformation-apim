@@ -132,42 +132,8 @@ Resources:
               - ':server-certificate'
               - /
               - !Ref CertificateName
-        - LoadBalancerPort: '9763'
-          InstancePort: '9763'
-          Protocol: HTTP
-          InstanceProtocol: HTTP
-          PolicyNames:
-            - LBStickyPolicy
-        - LoadBalancerPort: '10389'
-          InstancePort: '10389'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '8000'
-          InstancePort: '8000'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '5701'
-          InstancePort: '5701'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '5672'
-          InstancePort: '5672'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '9611'
-          InstancePort: '9611'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '9711'
-          InstancePort: '9711'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '10397'
-          InstancePort: '10397'
-          Protocol: TCP
-          InstanceProtocol: TCP
       HealthCheck:
-          Target: 'TCP:9763'
+          Target: 'TCP:9443'
           HealthyThreshold: '3'
           UnhealthyThreshold: '5'
           Interval: '10'
@@ -186,38 +152,6 @@ Resources:
           FromPort: '8243'
           ToPort: '8243'
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9763'
-          ToPort: '9763'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '10389'
-          ToPort: '10389'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '8000'
-          ToPort: '8000'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5701'
-          ToPort: '5701'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5672'
-          ToPort: '5672'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9611'
-          ToPort: '9611'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9711'
-          ToPort: '9711'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '10397'
-          ToPort: '10397'
-          CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: tcp
           FromPort: '9443'
@@ -227,38 +161,6 @@ Resources:
           FromPort: '8243'
           ToPort: '8243'
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9763'
-          ToPort: '9763'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '10389'
-          ToPort: '10389'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '8000'
-          ToPort: '8000'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5701'
-          ToPort: '5701'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '5672'
-          ToPort: '5672'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9611'
-          ToPort: '9611'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '9711'
-          ToPort: '9711'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '10397'
-          ToPort: '10397'
-          CidrIp: 0.0.0.0/0
   ProductSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -266,88 +168,16 @@ Resources:
       GroupDescription: Product Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '2049'
-          ToPort: '2049'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
           FromPort: '9443'
           ToPort: '9443'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '5701'
-          ToPort: '5701'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '9763'
-          ToPort: '9763'
           SourceSecurityGroupId: !Ref ELBSecurityGroup
         - IpProtocol: tcp
           FromPort: '8243'
           ToPort: '8243'
           SourceSecurityGroupId: !Ref ELBSecurityGroup
         - IpProtocol: tcp
-          FromPort: '8280'
-          ToPort: '8280'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '80'
-          ToPort: '80'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '3306'
-          ToPort: '3306'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: icmp
-          FromPort: '-1'
-          ToPort: '-1'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '3306'
-          ToPort: '3306'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '10389'
-          ToPort: '10389'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '8000'
-          ToPort: '8000'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '5701'
-          ToPort: '5701'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
           FromPort: '5672'
           ToPort: '5672'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '9611'
-          ToPort: '9611'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '9711'
-          ToPort: '9711'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '10397'
-          ToPort: '10397'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '7611'
-          ToPort: '7611'
-          SourceSecurityGroupId: !Ref ELBSecurityGroup
-        - IpProtocol: tcp
-          FromPort: '7711'
-          ToPort: '7711'
           SourceSecurityGroupId: !Ref ELBSecurityGroup
       SecurityGroupEgress:
         - IpProtocol: -1
