@@ -233,6 +233,39 @@ Resources:
       SubnetIds:
         - !Ref PrivateSubnet
         - !Ref PrivateSubnet2
+  WSO2AMNFSMount:
+    Type: 'AWS::EFS::FileSystem'
+  WSO2AMAnalyticsNFSMount:
+    Type: 'AWS::EFS::FileSystem'
+  WSO2EFSMtSN1:
+    Type: 'AWS::EFS::MountTarget'
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      FileSystemId: !Ref WSO2AMNFSMount
+      SecurityGroups:
+        - !Ref ProductSecurityGroup
+  WSO2EFSMtSN2:
+    Type: 'AWS::EFS::MountTarget'
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      FileSystemId: !Ref WSO2AMNFSMount
+      SecurityGroups:
+        - !Ref ProductSecurityGroup
+  WSO2AnalyticsEFSMtSN1:
+    Type: 'AWS::EFS::MountTarget'
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      FileSystemId: !Ref WSO2AMAnalyticsNFSMount
+      SecurityGroups:
+        - !Ref ProductSecurityGroup
+#  WSO2AnalyticsEFSMtSN2:
+#    Type: 'AWS::EFS::MountTarget'
+#    Properties:
+#      SubnetId: !Ref PrivateSubnet2
+#      FileSystemId: !Ref WSO2AMAnalyticsNFSMount
+#      SecurityGroups:
+#        - !Ref ProductSecurityGroup
+
 #  WSO2AMLC:
 #    Type: 'AWS::AutoScaling::LaunchConfiguration'
 #    Properties:
@@ -488,23 +521,6 @@ Resources:
 #        Timeout: '5'
 #    DependsOn:
 #      - ProductSecurityGroup
-#  AMNFSMount:
-#    Type: 'AWS::EFS::FileSystem'
-#    Properties: {}
-#  EFSMtSN1:
-#    Type: 'AWS::EFS::MountTarget'
-#    Properties:
-#      SubnetId: !Ref PublicSubnet
-#      FileSystemId: !Ref AMNFSMount
-#      SecurityGroups:
-#        - !Ref ProductSecurityGroup
-#  EFSMtSN2:
-#    Type: 'AWS::EFS::MountTarget'
-#    Properties:
-#      SubnetId: !Ref PublicSubnet2
-#      FileSystemId: !Ref AMNFSMount
-#      SecurityGroups:
-#        - !Ref ProductSecurityGroup
 #  WSO2AMAnalyticsASGSN1:
 #    Type: 'AWS::AutoScaling::AutoScalingGroup'
 #    Properties:
