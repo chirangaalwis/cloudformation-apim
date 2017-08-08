@@ -194,6 +194,11 @@ Resources:
           FromPort: '3306'
           ToPort: '3306'
           SourceSecurityGroupId: !Ref ProductSecurityGroup
+  EFSSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      GroupDescription: EFS Security Group
   WSO2AMDB:
     Type: 'AWS::RDS::DBInstance'
     Properties:
@@ -243,21 +248,21 @@ Resources:
       SubnetId: !Ref PrivateSubnet
       FileSystemId: !Ref WSO2AMNFSMount
       SecurityGroups:
-        - !Ref ProductSecurityGroup
+        - !Ref EFSSecurityGroup
   WSO2EFSMtSN2:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref PrivateSubnet2
       FileSystemId: !Ref WSO2AMNFSMount
       SecurityGroups:
-        - !Ref ProductSecurityGroup
+        - !Ref EFSSecurityGroup
   WSO2AnalyticsEFSMtSN1:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref PrivateSubnet
       FileSystemId: !Ref WSO2AMAnalyticsNFSMount
       SecurityGroups:
-        - !Ref ProductSecurityGroup
+        - !Ref EFSSecurityGroup
 #  WSO2AnalyticsEFSMtSN2:
 #    Type: 'AWS::EFS::MountTarget'
 #    Properties:
