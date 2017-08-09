@@ -11,6 +11,9 @@ Metadata:
           default: Network Configuration
         Parameters:
           - CertificateName
+          - WSO2AM1PrimaryIPAddress
+          - WSO2AM1PrimaryIPAddress
+          - WSO2AMAnalytics1PrimaryIPAddress
       - Label:
           default: Database Configuration
         Parameters:
@@ -22,7 +25,7 @@ Metadata:
       CertificateName:
         default: Which certificate should be used at the Load Balancer for APIM?
       DBUsername:
-        default: APIM Database Master username?
+        default: APIM Database Master username
       DBPassword:
         default: APIM Database Master password
 Resources:
@@ -263,6 +266,34 @@ Resources:
       FileSystemId: !Ref WSO2AMAnalyticsNFSMount
       SecurityGroups:
         - !Ref EFSSecurityGroup
+
+  WSO2AM1Eth0:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      Description: eth0 for WSO2 API Manager instance one
+      GroupSet:
+        - !Ref ProductSecurityGroup
+      PrivateIpAddress: !Ref WSO2AM1PrimaryIPAddress
+      SourceDestCheck: 'true'
+      SubnetId: !Ref PrivateSubnet
+  WSO2AM2Eth0:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      Description: eth0 for WSO2 API Manager instance two
+      GroupSet:
+        - !Ref ProductSecurityGroup
+      PrivateIpAddress: !Ref WSO2AM2PrimaryIPAddress
+      SourceDestCheck: 'true'
+      SubnetId: !Ref PrivateSubnet2
+  WSO2AMAnalytics1Eth0:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      Description: eth0 for WSO2 API Manager Analytics instance one
+      GroupSet:
+        - !Ref ProductSecurityGroup
+      PrivateIpAddress: !Ref WSO2AMAnalytics1PrimaryIPAddress
+      SourceDestCheck: 'true'
+      SubnetId: !Ref PrivateSubnet
 #  WSO2AnalyticsEFSMtSN2:
 #    Type: 'AWS::EFS::MountTarget'
 #    Properties:
@@ -826,6 +857,25 @@ Parameters:
     Description: A previously uploaded certificate to use at the Load Balancer Listeners.
     Type: String
     MinLength: 1
+  WSO2AM1PrimaryIPAddress:
+    Type: String
+    Description: >-
+      Primary private IP for WSO2 API Manager instance one. This must be a valid IP address within the subnet range.
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})'
+    ConstraintDescription: must be a valid IP address of the form x.x.x.x.
+  WSO2AM2PrimaryIPAddress:
+    Type: String
+    Description: >-
+      Primary private IP for WSO2 API Manager instance two. This must be a valid IP address within the subnet range.
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})'
+    ConstraintDescription: must be a valid IP address of the form x.x.x.x.
+  WSO2AMAnalytics1PrimaryIPAddress:
+    Type: String
+    Description: >-
+      Primary private IP for WSO2 API Manager Analytics instance one. This must be a valid IP address within
+      the subnet range.
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})'
+    ConstraintDescription: must be a valid IP address of the form x.x.x.x.
   DBUsername:
     Description: The username to be used in the WSO2 AM DB.
     Type: String
