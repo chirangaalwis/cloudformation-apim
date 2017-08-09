@@ -58,22 +58,22 @@ Resources:
   PublicRoute:
     Type: 'AWS::EC2::Route'
     DependsOn:
-      - EC2VPCG1W38G
+      - WSO2AMVPCGatewayAttachment
     Properties:
       RouteTableId: !Ref PublicRouteTable
       GatewayId: !Ref PublicInternetGateway
       DestinationCidrBlock: 0.0.0.0/0
-  EC2SRTA4ALO8:
+  PublicSubnetRouteTableAssociation:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet
-  EC2SRTA21VEF:
+  PublicSubnetRouteTableAssociation2:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet2
-  EC2VPCG1W38G:
+  WSO2AMVPCGatewayAttachment:
     Type: 'AWS::EC2::VPCGatewayAttachment'
     Properties:
       InternetGatewayId: !Ref PublicInternetGateway
