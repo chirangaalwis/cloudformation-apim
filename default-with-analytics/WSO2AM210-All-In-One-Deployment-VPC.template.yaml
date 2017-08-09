@@ -26,7 +26,7 @@ Metadata:
       DBPassword:
         default: APIM Database Master password
 Resources:
-  WSO2AM1SIMPLE1VPC:
+  WSO2AMVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
       CidrBlock: 10.0.0.0/16
@@ -35,7 +35,7 @@ Resources:
   PublicSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       CidrBlock: 10.0.254.0/24
       AvailabilityZone: !Select
         - '0'
@@ -43,7 +43,7 @@ Resources:
   PublicSubnet2:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       CidrBlock: 10.0.252.0/24
       MapPublicIpOnLaunch: true
       AvailabilityZone: !Select
@@ -54,7 +54,7 @@ Resources:
   PublicRouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
   PublicRoute:
     Type: 'AWS::EC2::Route'
     DependsOn:
@@ -77,11 +77,11 @@ Resources:
     Type: 'AWS::EC2::VPCGatewayAttachment'
     Properties:
       InternetGatewayId: !Ref PublicInternetGateway
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
   PrivateSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: !Select
         - '0'
@@ -89,7 +89,7 @@ Resources:
   PrivateSubnet2:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       CidrBlock: 10.0.2.0/24
       AvailabilityZone: !Select
         - '1'
@@ -141,7 +141,7 @@ Resources:
   ELBSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       GroupDescription: ELB Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -164,7 +164,7 @@ Resources:
   WSO2AMSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       GroupDescription: WSO2 API Manager Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -187,7 +187,7 @@ Resources:
   WSO2AMAnalyticsSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       GroupDescription: WSO2 API Manager Analytics Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -206,7 +206,7 @@ Resources:
   WSO2AMDBSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       GroupDescription: WSO2 API Manager DB Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -216,7 +216,7 @@ Resources:
   WSO2AMAnalyticsDBSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       GroupDescription: WSO2 API Manager Analytics DB Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -226,7 +226,7 @@ Resources:
   EFSSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      VpcId: !Ref WSO2AMVPC
       GroupDescription: EFS Security Group
   WSO2AMDB:
     Type: 'AWS::RDS::DBInstance'
