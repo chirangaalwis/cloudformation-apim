@@ -215,7 +215,7 @@ Resources:
             - !Join 
               - ''
               - - sed -i "s/CF_ENI_ID/
-                - !Ref AMENI1
+                - !Ref WSO2AM1Eth0
                 - /g" /usr/local/bin/allocate_ips.sh
             - !Join 
               - ''
@@ -231,7 +231,7 @@ Resources:
               - ''
               - - sed -i "s/CF_ENI_PRIVATE_IP/
                 - !GetAtt 
-                  - AMENI1
+                  - WSO2AM1Eth0
                   - PrimaryPrivateIpAddress
                 - /g" /usr/local/bin/allocate_ips.sh
             - mkdir -p ~/.aws
@@ -269,7 +269,7 @@ Resources:
               - ''
               - - sed -i "s/CF_APIM_IP/
                 - !GetAtt 
-                  - AMENI1
+                  - WSO2AM1Eth0
                   - PrimaryPrivateIpAddress
                 - >-
                   /g"
@@ -278,7 +278,7 @@ Resources:
               - ''
               - - sed -i "s/CF_ANALYTICS_IP/
                 - !GetAtt 
-                  - AnalyticsENI1
+                  - WSO2AMAnalytics1Eth0
                   - PrimaryPrivateIpAddress
                 - >-
                   /g"
@@ -410,7 +410,7 @@ Resources:
             - !Join 
               - ''
               - - sed -i "s/CF_ENI_ID/
-                - !Ref AMENI2
+                - !Ref WSO2AM2Eth0
                 - /g" /usr/local/bin/allocate_ips.sh
             - !Join 
               - ''
@@ -426,7 +426,7 @@ Resources:
               - ''
               - - sed -i "s/CF_ENI_PRIVATE_IP/
                 - !GetAtt 
-                  - AMENI2
+                  - WSO2AM2Eth0
                   - PrimaryPrivateIpAddress
                 - /g" /usr/local/bin/allocate_ips.sh
             - mkdir -p ~/.aws
@@ -464,7 +464,7 @@ Resources:
               - ''
               - - sed -i "s/CF_APIM_IP/
                 - !GetAtt 
-                  - AMENI2
+                  - WSO2AM2Eth0
                   - PrimaryPrivateIpAddress
                 - >-
                   /g"
@@ -473,7 +473,7 @@ Resources:
               - ''
               - - sed -i "s/CF_ANALYTICS_IP/
                 - !GetAtt 
-                  - AnalyticsENI1
+                  - WSO2AMAnalytics1Eth0
                   - PrimaryPrivateIpAddress
                 - >-
                   /g"
@@ -805,7 +805,7 @@ Resources:
             - !Join 
               - ''
               - - sed -i "s/CF_ENI_ID/
-                - !Ref AnalyticsENI1
+                - !Ref WSO2AMAnalytics1Eth0
                 - /g" /usr/local/bin/allocate_ips.sh
             - !Join 
               - ''
@@ -821,7 +821,7 @@ Resources:
               - ''
               - - sed -i "s/CF_ENI_PRIVATE_IP/
                 - !GetAtt 
-                  - AnalyticsENI1
+                  - WSO2AMAnalytics1Eth0
                   - PrimaryPrivateIpAddress
                 - /g" /usr/local/bin/allocate_ips.sh
             - mkdir -p ~/.aws
@@ -1025,27 +1025,33 @@ Resources:
         Timeout: '5'
     DependsOn:
       - ELBSecurityGroup
-  AMENI1:
+  WSO2AM1Eth0:
     Type: 'AWS::EC2::NetworkInterface'
     Properties:
-      Description: AM ENI for Node1
-      SubnetId: !Ref PublicSubnet
+      Description: eth0 for WSO2 API Manager instance one
       GroupSet:
         - !Ref WSO2AMSecurityGroup
-  AMENI2:
+      PrivateIpAddress: 10.0.1.10
+      SourceDestCheck: 'true'
+      SubnetId: !Ref PrivateSubnet
+  WSO2AM2Eth0:
     Type: 'AWS::EC2::NetworkInterface'
     Properties:
-      Description: AM ENI for Node2
-      SubnetId: !Ref PublicSubnet2
+      Description: eth0 for WSO2 API Manager instance two
       GroupSet:
         - !Ref WSO2AMSecurityGroup
-  AnalyticsENI1:
+      PrivateIpAddress: 10.0.2.10
+      SourceDestCheck: 'true'
+      SubnetId: !Ref PrivateSubnet2
+  WSO2AMAnalytics1Eth0:
     Type: 'AWS::EC2::NetworkInterface'
     Properties:
-      Description: Analytics ENI for Node1
-      SubnetId: !Ref PublicSubnet
+      Description: eth0 for WSO2 API Manager Analytics instance one
       GroupSet:
         - !Ref WSO2AMAnalyticsSecurityGroup
+      PrivateIpAddress: 10.0.1.11
+      SourceDestCheck: 'true'
+      SubnetId: !Ref PrivateSubnet
   AWSCliInstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
@@ -1083,7 +1089,7 @@ Resources:
       AllocationId: !GetAtt
         - AMEIP1
         - AllocationId
-      NetworkInterfaceId: !Ref AMENI1
+      NetworkInterfaceId: !Ref WSO2AM1Eth0
   AMEIP2:
     Type: 'AWS::EC2::EIP'
     Properties:
@@ -1094,7 +1100,7 @@ Resources:
       AllocationId: !GetAtt
         - AMEIP2
         - AllocationId
-      NetworkInterfaceId: !Ref AMENI2
+      NetworkInterfaceId: !Ref WSO2AM2Eth0
   AnalyticsEIP1:
     Type: 'AWS::EC2::EIP'
     Properties:
@@ -1105,7 +1111,7 @@ Resources:
       AllocationId: !GetAtt
         - AnalyticsEIP1
         - AllocationId
-      NetworkInterfaceId: !Ref AnalyticsENI1
+      NetworkInterfaceId: !Ref WSO2AMAnalytics1Eth0
 Outputs:
   Publisher:
     Value: !Join 
