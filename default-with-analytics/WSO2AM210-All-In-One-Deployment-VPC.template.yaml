@@ -756,8 +756,6 @@ Resources:
       DesiredCapacity: 1
       MinSize: 1
       MaxSize: 1
-      LoadBalancerNames:
-        - !Ref WSO2AMAnalyticsELB
       VPCZoneIdentifier:
         - !Ref PublicSubnet
       Tags:
@@ -775,7 +773,6 @@ Resources:
           PropagateAtLaunch: 'true'
     DependsOn:
       - WSO2AMAnalyticsLC
-      - WSO2AMAnalyticsELB
       - WSO2AMELB
   WSO2AMAnalyticsLC:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
@@ -951,80 +948,7 @@ Resources:
             - cat /dev/null > ~/.bash_history && history -c
     DependsOn:
       - WSO2AMAnalyticsSecurityGroup
-      - WSO2AMAnalyticsELB
       - VPCInternetGatewayAttachment
-  WSO2AMAnalyticsELB:
-    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
-    Properties:
-      CrossZone: true
-      SecurityGroups:
-        - !Ref ELBSecurityGroup
-      Subnets:
-        - !Ref PublicSubnet2
-        - !Ref PublicSubnet
-      LBCookieStickinessPolicy:
-        - PolicyName: LBStickyPolicy
-      Listeners:
-        - LoadBalancerPort: '9443'
-          InstancePort: '9443'
-          Protocol: HTTPS
-          InstanceProtocol: HTTPS
-          PolicyNames:
-            - LBStickyPolicy
-          SSLCertificateId: !Join
-            - ''
-            - - 'arn:aws:iam::'
-              - !Ref 'AWS::AccountId'
-              - ':server-certificate'
-              - /
-              - !Ref CertificateName
-        - LoadBalancerPort: '8243'
-          InstancePort: '8243'
-          Protocol: HTTPS
-          InstanceProtocol: HTTPS
-          PolicyNames:
-            - LBStickyPolicy
-          SSLCertificateId: !Join
-            - ''
-            - - 'arn:aws:iam::'
-              - !Ref 'AWS::AccountId'
-              - ':server-certificate'
-              - /
-              - !Ref CertificateName
-        - LoadBalancerPort: '9763'
-          InstancePort: '9763'
-          Protocol: HTTP
-          InstanceProtocol: HTTP
-          PolicyNames:
-            - LBStickyPolicy
-        - LoadBalancerPort: '10389'
-          InstancePort: '10389'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '8000'
-          InstancePort: '8000'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '5701'
-          InstancePort: '5701'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '5672'
-          InstancePort: '5672'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '10397'
-          InstancePort: '10397'
-          Protocol: TCP
-          InstanceProtocol: TCP
-      HealthCheck:
-        Target: 'TCP:9763'
-        HealthyThreshold: '3'
-        UnhealthyThreshold: '5'
-        Interval: '10'
-        Timeout: '5'
-    DependsOn:
-      - ELBSecurityGroup
   WSO2AM1Eth0:
     Type: 'AWS::EC2::NetworkInterface'
     Properties:
