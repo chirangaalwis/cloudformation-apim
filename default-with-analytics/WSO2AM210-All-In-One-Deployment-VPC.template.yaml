@@ -1041,7 +1041,6 @@ Parameters:
     Default: rootrootroot
     MinLength: 8
     NoEcho: true
-Conditions: {}
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
