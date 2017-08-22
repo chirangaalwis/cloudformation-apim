@@ -1104,6 +1104,15 @@ Resources:
                 Action:
                   - 'ec2:*'
                 Resource: '*'
+        - PolicyName: log-management-policy
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:Create*
+                  - logs:PutLogEvents
+                Resource:
+                  - arn:aws:logs:*:*:*
   WSO2APIMNode1EIP:
     Type: 'AWS::EC2::EIP'
     Properties:
