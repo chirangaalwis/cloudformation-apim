@@ -1196,7 +1196,6 @@ Parameters:
     Default: rootrootroot
     MinLength: 8
     NoEcho: true
-Conditions: {}
 Mappings:
   WSO2APIMAMIRegionMap:
     ap-northeast-1:
