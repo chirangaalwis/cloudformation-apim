@@ -1097,13 +1097,6 @@ Resources:
               - 'sts:AssumeRole'
       Path: /
       Policies:
-        - PolicyName: all-ec2TODO
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action:
-                  - 'ec2:*'
-                Resource: '*'
         - PolicyName: log-management-policy
           PolicyDocument:
             Statement:
