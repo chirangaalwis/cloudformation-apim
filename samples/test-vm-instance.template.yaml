@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: This is a test instance template.
+Resources:
+  WSO2AMVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+  Subnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+      CidrBlock: 10.0.254.0/24
+      AvailabilityZone: !Select
+        - '0'
+        - !GetAZs ''
+  PublicInternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+  PublicSubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref Subnet
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      GatewayId: !Ref PublicInternetGateway
+      DestinationCidrBlock: 0.0.0.0/0
+    DependsOn: VPCInternetGatewayAttachment
+  VPCInternetGatewayAttachment:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: !Ref PublicInternetGateway
+      VpcId: !Ref WSO2AMVPC
+  WSO2AMSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+      GroupDescription: WSO2 API Manager Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: '0'
+          ToPort: '0'
+          CidrIp: 0.0.0.0/0
+  DummyInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !FindInMap
+        - AWSAMIRegionMap
+        - !Ref 'AWS::Region'
+        - Ubuntu140464bit
+      InstanceType: t2.medium
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: '20'
+            VolumeType: gp2
+            DeleteOnTermination: 'true'
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - Description: eth0 for WSO2 API Manager instance one
+          GroupSet:
+            - !Ref WSO2AMSecurityGroup
+          PrivateIpAddress: 10.0.254.20
+          AssociatePublicIpAddress: 'true'
+          DeviceIndex: '0'
+          DeleteOnTermination: 'true'
+          SubnetId: !Ref Subnet
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #!/bin/bash -xe
+            wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
+            sudo mv /awslogs-agent-setup.py /home/ubuntu/
+            cd /home/ubuntu
+            echo -e "[general]\nstate_file = /var/awslogs/state/agent-state\n\n[/var/log/syslog]\ndatetime_format = %Y-%m-%d %H:%M:%S\nfile = /var/log/syslog\nbuffer_duration = 5000\nlog_stream_name = SysLogStream\ninitial_position = end_of_file\nlog_group_name = SysLogGroup" > awslogconfigs.conf
+            sudo python ./awslogs-agent-setup.py --region ${AWS::Region} --configfile=/home/ubuntu/awslogconfigs.conf -n true
+            printf "AKIAJ45RB64Q2H6QH47A\nF5UDoqB+ZM5rp2jrd8nN8jb4JuCLZSe54Dy2YupB\nus-east-2\njson\n" | sudo python ./awslogs-agent-setup.py --region ${AWS::Region}
+            sudo /etc/init.d/awslogs stop
+            sudo /etc/init.d/awslogs start
+#      UserData: !Base64
+#        'Fn::Join':
+#          - ''
+#          - - |
+#              #!/bin/bash -xe
+#            - |
+#              wget https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py
+#            - |
+#              sudo mv /awslogs-agent-setup.py .
+#            - |
+      Tags:
+        - Key: Name
+          Value: dummy-instance
+#    CreationPolicy:
+#      ResourceSignal:
+#        Timeout: PT5M
+Mappings:
+  AWSAMIRegionMap:
+    ap-northeast-1:
+      Ubuntu140464bit: ami-2e63924f
+    ap-northeast-2:
+      Ubuntu140464bit: ami-979258f9
+    ap-south-1:
+      Ubuntu140464bit: ami-4a90fa25
+    ap-southeast-1:
+      Ubuntu140464bit: ami-ea2bf989
+    ap-southeast-2:
+      Ubuntu140464bit: ami-396a415a
+    eu-central-1:
+      Ubuntu140464bit: ami-4bd03b24
+    eu-west-1:
+      Ubuntu140464bit: ami-02b62c71
+    eu-west-2:
+      Ubuntu140464bit: ami-63342007
+    us-east-1:
+      Ubuntu140464bit: ami-a9e2a9bf
+    us-east-2:
+      Ubuntu140464bit: ami-151d3b70
+    us-west-1:
+      Ubuntu140464bit: ami-992661f9
+    us-west-2:
+      Ubuntu140464bit: ami-718c6909
+    ca-central-1:
+      Ubuntu140464bit: ami-beea56da
+    sa-east-1:
+      Ubuntu140464bit: ami-8df695e1
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance.
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.

@@ -1,0 +1,1192 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  WSO2 API Manager deployment with WSO2 API Manager Analytics for AWS Marketplace
+Metadata:
+  'AWS::CloudFormation::Designer':
+    94d01f8e-561d-4f1c-ae80-7b7c91ac9a85:
+      size:
+        width: 1050
+        height: 480
+      position:
+        x: 10
+        'y': 60
+      z: 1
+      embeds:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+        - a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae
+        - e0a8865b-23ac-40ea-801a-56b0e38ae04c
+        - 8f3f5b32-2b2a-4f27-b8a2-daab8e95493d
+        - 611aee09-82ae-4931-b533-ba1d29a5fa17
+        - c15a7682-defb-4c19-add0-264f490e32d0
+        - e0cb34b0-7281-408b-aed9-cfa76385f8b7
+    e0cb34b0-7281-408b-aed9-cfa76385f8b7:
+      size:
+        width: 390
+        height: 210
+      position:
+        x: 60
+        'y': 200
+      z: 2
+      parent: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+      embeds:
+        - 9f5ecd33-8cd4-45b9-b37e-64a38a730a23
+    c3bf4603-e816-45f9-b702-ecd5788d7dd5:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -220
+        'y': 260
+      z: 0
+      embeds: []
+    c0002325-86c9-48f6-90e6-392e629eccae:
+      source:
+        id: c3bf4603-e816-45f9-b702-ecd5788d7dd5
+      target:
+        id: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+      z: 0
+    c15a7682-defb-4c19-add0-264f490e32d0:
+      size:
+        width: 160
+        height: 140
+      position:
+        x: -120
+        'y': 590
+      z: 0
+      parent: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+      embeds:
+        - f22ce726-e8b4-4855-9acd-fef2948608cb
+    f22ce726-e8b4-4855-9acd-fef2948608cb:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -70
+        'y': 630
+      z: 1
+      parent: c15a7682-defb-4c19-add0-264f490e32d0
+      embeds: []
+      references:
+        - c3bf4603-e816-45f9-b702-ecd5788d7dd5
+      dependson:
+        - c0002325-86c9-48f6-90e6-392e629eccae
+    43a4f41b-b25d-4101-bbe6-905b70c0fcf6:
+      source:
+        id: f22ce726-e8b4-4855-9acd-fef2948608cb
+      target:
+        id: c3bf4603-e816-45f9-b702-ecd5788d7dd5
+      z: 3
+    94f28a00-d1b3-44a4-9168-ad53acd76771:
+      source:
+        id: f22ce726-e8b4-4855-9acd-fef2948608cb
+      target:
+        id: c0002325-86c9-48f6-90e6-392e629eccae
+      z: 4
+    5ee54e29-7340-42e3-b81b-932dd59ba583:
+      source:
+        id: c15a7682-defb-4c19-add0-264f490e32d0
+      target:
+        id: e0cb34b0-7281-408b-aed9-cfa76385f8b7
+      z: 0
+    611aee09-82ae-4931-b533-ba1d29a5fa17:
+      size:
+        width: 500
+        height: 180
+      position:
+        x: 510
+        'y': 100
+      z: 2
+      parent: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+      embeds:
+        - a79bd092-e63b-4437-91c7-9eccb5704d85
+        - 6e10e2a4-d685-435e-b789-9782199a9ac6
+        - 4e0afc95-bfe8-446c-b30a-a623fc6f900a
+        - c9b38cb4-6655-4f60-a8a7-1c4fdb71b05f
+    8f3f5b32-2b2a-4f27-b8a2-daab8e95493d:
+      size:
+        width: 500
+        height: 180
+      position:
+        x: 510
+        'y': 310
+      z: 2
+      parent: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+      embeds:
+        - 28e3ee30-f4e9-4a30-9cc4-a7f8f3770b57
+        - e601fae8-089f-4157-a538-be7331546b18
+        - 0bd14d06-a2ae-45f8-a40b-f3c9160a951e
+        - d247efef-c2c9-4b45-b20a-e7b0e89a0e04
+    e0a8865b-23ac-40ea-801a-56b0e38ae04c:
+      size:
+        width: 160
+        height: 140
+      position:
+        x: 90
+        'y': 590
+      z: 0
+      parent: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+      embeds:
+        - 7f1aa7ae-787a-48c7-b929-c5c7a33b10e1
+    7f1aa7ae-787a-48c7-b929-c5c7a33b10e1:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 140
+        'y': 630
+      z: 1
+      parent: e0a8865b-23ac-40ea-801a-56b0e38ae04c
+      embeds: []
+      isrelatedto:
+        - 9f5ecd33-8cd4-45b9-b37e-64a38a730a23
+    6aca9b5f-0afc-4ca2-8db8-9a21c9661be5:
+      source:
+        id: e0a8865b-23ac-40ea-801a-56b0e38ae04c
+      target:
+        id: 611aee09-82ae-4931-b533-ba1d29a5fa17
+      z: 0
+    7c5f1c1b-30de-4b24-b8f1-f8ee0536e90e:
+      source:
+        id: e0a8865b-23ac-40ea-801a-56b0e38ae04c
+      target:
+        id: 8f3f5b32-2b2a-4f27-b8a2-daab8e95493d
+      z: 0
+    9f5ecd33-8cd4-45b9-b37e-64a38a730a23:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 90
+        'y': 240
+      z: 3
+      parent: e0cb34b0-7281-408b-aed9-cfa76385f8b7
+      embeds: []
+      isrelatedto:
+        - e25f1ab1-4f7e-4a5f-8d3e-cb8a5eeca6d4
+    e25f1ab1-4f7e-4a5f-8d3e-cb8a5eeca6d4:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: -220
+        'y': 140
+      z: 0
+      embeds: []
+    abab2a16-eb38-4670-bfbe-c1176ee2075a:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 170
+        'y': 90
+      z: 2
+      parent: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+      embeds: []
+    a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 280
+        'y': 90
+      z: 2
+      parent: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+      embeds: []
+      isrelatedto:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+    c3466e42-9087-49ac-a5fb-e1eb7c570f39:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1150
+        'y': 320
+      z: 0
+      embeds: []
+      isconnectedto:
+        - e0cb34b0-7281-408b-aed9-cfa76385f8b7
+      ismemberof:
+        - a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae
+      dependson:
+        - a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae
+    43c7eda3-aaee-4bd1-bc7d-da9b824695bb:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1260
+        'y': 320
+      z: 0
+      embeds: []
+      isconnectedto:
+        - e0cb34b0-7281-408b-aed9-cfa76385f8b7
+      ismemberof:
+        - a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae
+      dependson:
+        - a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae
+    ed8dc1e3-0eb6-4a30-8de7-9677d7d2f1ca:
+      source:
+        id: c3466e42-9087-49ac-a5fb-e1eb7c570f39
+      target:
+        id: a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae
+      z: 4
+    b6bd4079-72ed-44eb-80aa-e2021278122d:
+      source:
+        id: 43c7eda3-aaee-4bd1-bc7d-da9b824695bb
+      target:
+        id: a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae
+      z: 5
+    60418ccf-d5f1-4efc-b667-0084e48b3ff7:
+      size:
+        width: 230
+        height: 140
+      position:
+        x: 550
+        'y': -130
+      z: 0
+      embeds:
+        - f9589510-d03c-4581-ae9c-962d5b1dd3c1
+        - 0c7f70f5-78a3-4bb7-ad91-0b0ddab37934
+      isconnectedto:
+        - 611aee09-82ae-4931-b533-ba1d29a5fa17
+        - 8f3f5b32-2b2a-4f27-b8a2-daab8e95493d
+    0c7f70f5-78a3-4bb7-ad91-0b0ddab37934:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 580
+        'y': -90
+      z: 1
+      parent: 60418ccf-d5f1-4efc-b667-0084e48b3ff7
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+    f9589510-d03c-4581-ae9c-962d5b1dd3c1:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 680
+        'y': -90
+      z: 1
+      parent: 60418ccf-d5f1-4efc-b667-0084e48b3ff7
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+    0f23ff1f-b6d2-4ba9-bd92-67c865d13b70:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1150
+        'y': 410
+      z: 0
+      embeds: []
+    5d785e14-a733-4735-adf9-dfde6aca9583:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1260
+        'y': 410
+      z: 0
+      embeds: []
+    c9b38cb4-6655-4f60-a8a7-1c4fdb71b05f:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 550
+        'y': 160
+      z: 3
+      parent: 611aee09-82ae-4931-b533-ba1d29a5fa17
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+      references:
+        - 0f23ff1f-b6d2-4ba9-bd92-67c865d13b70
+    bbd1337b-0b9f-46ff-b75e-71aea52026e2:
+      source:
+        id: c9b38cb4-6655-4f60-a8a7-1c4fdb71b05f
+      target:
+        id: 0f23ff1f-b6d2-4ba9-bd92-67c865d13b70
+      z: 4
+    c3491177-42a2-43ca-9326-ab488f8c7342:
+      source:
+        id: c9b38cb4-6655-4f60-a8a7-1c4fdb71b05f
+      target:
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+      z: 5
+    d247efef-c2c9-4b45-b20a-e7b0e89a0e04:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 550
+        'y': 370
+      z: 3
+      parent: 8f3f5b32-2b2a-4f27-b8a2-daab8e95493d
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+      references:
+        - 0f23ff1f-b6d2-4ba9-bd92-67c865d13b70
+    addaf2c8-78a3-4faf-83f3-2b476276b811:
+      source:
+        id: d247efef-c2c9-4b45-b20a-e7b0e89a0e04
+      target:
+        id: 0f23ff1f-b6d2-4ba9-bd92-67c865d13b70
+      z: 4
+    d5b87267-4cd5-4fdf-85c9-0a5b0f6eeb68:
+      source:
+        id: d247efef-c2c9-4b45-b20a-e7b0e89a0e04
+      target:
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+      z: 5
+    4e0afc95-bfe8-446c-b30a-a623fc6f900a:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 650
+        'y': 160
+      z: 3
+      parent: 611aee09-82ae-4931-b533-ba1d29a5fa17
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+      references:
+        - 5d785e14-a733-4735-adf9-dfde6aca9583
+    0baf8085-7930-40a3-869e-701cbc9fa7fd:
+      source:
+        id: 4e0afc95-bfe8-446c-b30a-a623fc6f900a
+      target:
+        id: 5d785e14-a733-4735-adf9-dfde6aca9583
+      z: 4
+    a7903011-1a96-4e6c-91c9-83cf2209a662:
+      source:
+        id: 4e0afc95-bfe8-446c-b30a-a623fc6f900a
+      target:
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+      z: 5
+    0bd14d06-a2ae-45f8-a40b-f3c9160a951e:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 650
+        'y': 370
+      z: 3
+      parent: 8f3f5b32-2b2a-4f27-b8a2-daab8e95493d
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+      references:
+        - 5d785e14-a733-4735-adf9-dfde6aca9583
+    417b06fd-1c82-4c25-aeb7-a29c9bebf40c:
+      source:
+        id: 0bd14d06-a2ae-45f8-a40b-f3c9160a951e
+      target:
+        id: 5d785e14-a733-4735-adf9-dfde6aca9583
+      z: 4
+    526c5814-31ad-47b4-885c-d7d337d21baf:
+      source:
+        id: 0bd14d06-a2ae-45f8-a40b-f3c9160a951e
+      target:
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+      z: 5
+    6e10e2a4-d685-435e-b789-9782199a9ac6:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 760
+        'y': 160
+      z: 3
+      parent: 611aee09-82ae-4931-b533-ba1d29a5fa17
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+    a79bd092-e63b-4437-91c7-9eccb5704d85:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 860
+        'y': 160
+      z: 3
+      parent: 611aee09-82ae-4931-b533-ba1d29a5fa17
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+    e601fae8-089f-4157-a538-be7331546b18:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 760
+        'y': 370
+      z: 3
+      parent: 8f3f5b32-2b2a-4f27-b8a2-daab8e95493d
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+    28e3ee30-f4e9-4a30-9cc4-a7f8f3770b57:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 860
+        'y': 370
+      z: 3
+      parent: 8f3f5b32-2b2a-4f27-b8a2-daab8e95493d
+      embeds: []
+      ismemberof:
+        - abab2a16-eb38-4670-bfbe-c1176ee2075a
+    a66c5371-6b78-4ed0-819b-59f76e0dafe2:
+      source:
+        id: 6e10e2a4-d685-435e-b789-9782199a9ac6
+      target:
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+      z: 4
+    436f7565-51de-4c08-90c0-d5decbf3e2dd:
+      source:
+        id: a79bd092-e63b-4437-91c7-9eccb5704d85
+      target:
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+      z: 5
+    475d9e33-abc5-4494-8c86-76f2d7ee96f8:
+      source:
+        id: e601fae8-089f-4157-a538-be7331546b18
+      target:
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+      z: 6
+    fe424927-40ea-4b65-a8b9-02ae4b715299:
+      source:
+        id: 28e3ee30-f4e9-4a30-9cc4-a7f8f3770b57
+      target:
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+      z: 7
+Resources:
+  WSO2AMVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: !FindInMap 
+        - SubnetConfiguration
+        - VPC
+        - CIDR
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 94d01f8e-561d-4f1c-ae80-7b7c91ac9a85
+  PublicSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+      CidrBlock: !FindInMap 
+        - SubnetConfiguration
+        - Public
+        - CIDR
+      AvailabilityZone: !Select 
+        - '0'
+        - !GetAZs ''
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e0cb34b0-7281-408b-aed9-cfa76385f8b7
+  PublicInternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c3bf4603-e816-45f9-b702-ecd5788d7dd5
+  PublicInternetGatewayAttachment:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: !Ref PublicInternetGateway
+      VpcId: !Ref WSO2AMVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c0002325-86c9-48f6-90e6-392e629eccae
+  PublicSubnetRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c15a7682-defb-4c19-add0-264f490e32d0
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref PublicSubnetRouteTable
+      GatewayId: !Ref PublicInternetGateway
+      DestinationCidrBlock: 0.0.0.0/0
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f22ce726-e8b4-4855-9acd-fef2948608cb
+    DependsOn:
+      - PublicInternetGatewayAttachment
+  PublicSubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PublicSubnetRouteTable
+      SubnetId: !Ref PublicSubnet
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 5ee54e29-7340-42e3-b81b-932dd59ba583
+  PrivateSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+      CidrBlock: !FindInMap 
+        - SubnetConfiguration
+        - Private1
+        - CIDR
+      AvailabilityZone: !Select 
+        - '0'
+        - !GetAZs ''
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 611aee09-82ae-4931-b533-ba1d29a5fa17
+  PrivateSubnet2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+      CidrBlock: !FindInMap 
+        - SubnetConfiguration
+        - Private2
+        - CIDR
+      AvailabilityZone: !Select 
+        - '1'
+        - !GetAZs ''
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 8f3f5b32-2b2a-4f27-b8a2-daab8e95493d
+  PrivateSubnetRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e0a8865b-23ac-40ea-801a-56b0e38ae04c
+  PrivateRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGateway
+      RouteTableId: !Ref PrivateSubnetRouteTable
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7f1aa7ae-787a-48c7-b929-c5c7a33b10e1
+  PrivateSubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PrivateSubnetRouteTable
+      SubnetId: !Ref PrivateSubnet
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 6aca9b5f-0afc-4ca2-8db8-9a21c9661be5
+  PrivateSubnet2RouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PrivateSubnetRouteTable
+      SubnetId: !Ref PrivateSubnet2
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7c5f1c1b-30de-4b24-b8f1-f8ee0536e90e
+  NATGateway:
+    Type: 'AWS::EC2::NatGateway'
+    Properties:
+      AllocationId: !GetAtt 
+        - EIP
+        - AllocationId
+      SubnetId: !Ref PublicSubnet
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 9f5ecd33-8cd4-45b9-b37e-64a38a730a23
+  EIP:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      Domain: vpc
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e25f1ab1-4f7e-4a5f-8d3e-cb8a5eeca6d4
+  ProductSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+      GroupDescription: Product Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '2049'
+          ToPort: '2049'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8243'
+          ToPort: '8243'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8280'
+          ToPort: '8280'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '3306'
+          ToPort: '3306'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: icmp
+          FromPort: '-1'
+          ToPort: '-1'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '3306'
+          ToPort: '3306'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10389'
+          ToPort: '10389'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8000'
+          ToPort: '8000'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5672'
+          ToPort: '5672'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9611'
+          ToPort: '9611'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9711'
+          ToPort: '9711'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10397'
+          ToPort: '10397'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '7611'
+          ToPort: '7611'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '7711'
+          ToPort: '7711'
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: '0'
+          ToPort: '0'
+          CidrIp: 0.0.0.0/0
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: abab2a16-eb38-4670-bfbe-c1176ee2075a
+  ELBSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AMVPC
+      GroupDescription: ELB Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8243'
+          ToPort: '8243'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10389'
+          ToPort: '10389'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '8000'
+          ToPort: '8000'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '5672'
+          ToPort: '5672'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9611'
+          ToPort: '9611'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9711'
+          ToPort: '9711'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '10397'
+          ToPort: '10397'
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '8243'
+          ToPort: '8243'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '10389'
+          ToPort: '10389'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '8000'
+          ToPort: '8000'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '5701'
+          ToPort: '5701'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '5672'
+          ToPort: '5672'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '9611'
+          ToPort: '9611'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '9711'
+          ToPort: '9711'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '10397'
+          ToPort: '10397'
+          DestinationSecurityGroupId: !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a1cbd2b0-3b05-45bf-a839-ebce8bd0c9ae
+  WSO2AMELB:
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    Properties:
+      CrossZone: true
+      SecurityGroups:
+        - !Ref ELBSecurityGroup
+      Subnets:
+        - !Ref PublicSubnet
+      LBCookieStickinessPolicy:
+        - PolicyName: LBStickyPolicy
+      Listeners:
+        - LoadBalancerPort: '9443'
+          InstancePort: '9443'
+          Protocol: HTTPS
+          InstanceProtocol: HTTPS
+          PolicyNames:
+            - LBStickyPolicy
+          SSLCertificateId: !Join 
+            - ''
+            - - 'arn:aws:iam::'
+              - !Ref 'AWS::AccountId'
+              - ':server-certificate'
+              - /
+              - !Ref CertificateName
+        - LoadBalancerPort: '8243'
+          InstancePort: '8243'
+          Protocol: HTTPS
+          InstanceProtocol: HTTPS
+          PolicyNames:
+            - LBStickyPolicy
+          SSLCertificateId: !Join 
+            - ''
+            - - 'arn:aws:iam::'
+              - !Ref 'AWS::AccountId'
+              - ':server-certificate'
+              - /
+              - !Ref CertificateName
+        - LoadBalancerPort: '9763'
+          InstancePort: '9763'
+          Protocol: HTTP
+          InstanceProtocol: HTTP
+          PolicyNames:
+            - LBStickyPolicy
+        - LoadBalancerPort: '10389'
+          InstancePort: '10389'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '8000'
+          InstancePort: '8000'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '5701'
+          InstancePort: '5701'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '5672'
+          InstancePort: '5672'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '9611'
+          InstancePort: '9611'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '9711'
+          InstancePort: '9711'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '10397'
+          InstancePort: '10397'
+          Protocol: TCP
+          InstanceProtocol: TCP
+      HealthCheck:
+        Target: 'TCP:9763'
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '10'
+        Timeout: '5'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c3466e42-9087-49ac-a5fb-e1eb7c570f39
+    DependsOn:
+      - ELBSecurityGroup
+  WSO2AMAnalyticsELB:
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    Properties:
+      CrossZone: true
+      SecurityGroups:
+        - !Ref ELBSecurityGroup
+      Subnets:
+        - !Ref PublicSubnet
+      LBCookieStickinessPolicy:
+        - PolicyName: LBStickyPolicy
+      Listeners:
+        - LoadBalancerPort: '9443'
+          InstancePort: '9443'
+          Protocol: HTTPS
+          InstanceProtocol: HTTPS
+          PolicyNames:
+            - LBStickyPolicy
+          SSLCertificateId: !Join 
+            - ''
+            - - 'arn:aws:iam::'
+              - !Ref 'AWS::AccountId'
+              - ':server-certificate'
+              - /
+              - !Ref CertificateName
+        - LoadBalancerPort: '8243'
+          InstancePort: '8243'
+          Protocol: HTTPS
+          InstanceProtocol: HTTPS
+          PolicyNames:
+            - LBStickyPolicy
+          SSLCertificateId: !Join 
+            - ''
+            - - 'arn:aws:iam::'
+              - !Ref 'AWS::AccountId'
+              - ':server-certificate'
+              - /
+              - !Ref CertificateName
+        - LoadBalancerPort: '9763'
+          InstancePort: '9763'
+          Protocol: HTTP
+          InstanceProtocol: HTTP
+          PolicyNames:
+            - LBStickyPolicy
+        - LoadBalancerPort: '10389'
+          InstancePort: '10389'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '8000'
+          InstancePort: '8000'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '5701'
+          InstancePort: '5701'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '5672'
+          InstancePort: '5672'
+          Protocol: TCP
+          InstanceProtocol: TCP
+        - LoadBalancerPort: '10397'
+          InstancePort: '10397'
+          Protocol: TCP
+          InstanceProtocol: TCP
+      HealthCheck:
+        Target: 'TCP:9763'
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '10'
+        Timeout: '5'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 43c7eda3-aaee-4bd1-bc7d-da9b824695bb
+    DependsOn:
+      - ELBSecurityGroup
+  WSO2AMDBSubnetGroup:
+    Type: 'AWS::RDS::DBSubnetGroup'
+    Properties:
+      DBSubnetGroupDescription: DB Subnet Group
+      SubnetIds:
+        - !Ref PrivateSubnet
+        - !Ref PrivateSubnet2
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 60418ccf-d5f1-4efc-b667-0084e48b3ff7
+  WSO2AMDB:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      DBSubnetGroupName: !Ref WSO2AMDBSubnetGroup
+      VPCSecurityGroups:
+        - !Ref ProductSecurityGroup
+      DBInstanceClass: db.t2.medium
+      AllocatedStorage: 5
+      BackupRetentionPeriod: '0'
+      DBInstanceIdentifier: wso2amdb
+      DBName: WSO2AM_DB
+      Engine: MySQL
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      MultiAZ: 'false'
+      StorageType: gp2
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 0c7f70f5-78a3-4bb7-ad91-0b0ddab37934
+  WSO2AMAnalyticsDB:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      DBSubnetGroupName: !Ref WSO2AMDBSubnetGroup
+      VPCSecurityGroups:
+        - !Ref ProductSecurityGroup
+      DBInstanceClass: db.t2.medium
+      AllocatedStorage: 5
+      BackupRetentionPeriod: '0'
+      DBInstanceIdentifier: wso2amanalyticsdb
+      DBName: WSO2AMAnalytics_DB
+      Engine: MySQL
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      MultiAZ: 'false'
+      StorageType: gp2
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f9589510-d03c-4581-ae9c-962d5b1dd3c1
+  WSO2AMNFSMount:
+    Type: 'AWS::EFS::FileSystem'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 0f23ff1f-b6d2-4ba9-bd92-67c865d13b70
+  WSO2AMAnalyticsNFSMount:
+    Type: 'AWS::EFS::FileSystem'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 5d785e14-a733-4735-adf9-dfde6aca9583
+  WSO2EFSMtSN1:
+    Type: 'AWS::EFS::MountTarget'
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      FileSystemId: !Ref WSO2AMNFSMount
+      SecurityGroups:
+        - !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c9b38cb4-6655-4f60-a8a7-1c4fdb71b05f
+  WSO2EFSMtSN2:
+    Type: 'AWS::EFS::MountTarget'
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      FileSystemId: !Ref WSO2AMNFSMount
+      SecurityGroups:
+        - !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d247efef-c2c9-4b45-b20a-e7b0e89a0e04
+  WSO2AnalyticsEFSMtSN1:
+    Type: 'AWS::EFS::MountTarget'
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      FileSystemId: !Ref WSO2AMAnalyticsNFSMount
+      SecurityGroups:
+        - !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 4e0afc95-bfe8-446c-b30a-a623fc6f900a
+  WSO2AnalyticsEFSMtSN2:
+    Type: 'AWS::EFS::MountTarget'
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      FileSystemId: !Ref WSO2AMAnalyticsNFSMount
+      SecurityGroups:
+        - !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 0bd14d06-a2ae-45f8-a40b-f3c9160a951e
+  WSO2AMENI1:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      GroupSet:
+        - !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 6e10e2a4-d685-435e-b789-9782199a9ac6
+  WSO2AnalyticsENI1:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      GroupSet:
+        - !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a79bd092-e63b-4437-91c7-9eccb5704d85
+  WSO2AMENI2:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      GroupSet:
+        - !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e601fae8-089f-4157-a538-be7331546b18
+  WSO2AnalyticsENI2:
+    Type: 'AWS::EC2::NetworkInterface'
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      GroupSet:
+        - !Ref ProductSecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 28e3ee30-f4e9-4a30-9cc4-a7f8f3770b57
+Mappings:
+  AWSAMAMIRegionMap:
+    ap-northeast-1:
+      Ubuntu140464bit: ami-2e63924f
+    ap-northeast-2:
+      Ubuntu140464bit: ami-979258f9
+    ap-south-1:
+      Ubuntu140464bit: ami-4a90fa25
+    ap-southeast-1:
+      Ubuntu140464bit: ami-ea2bf989
+    ap-southeast-2:
+      Ubuntu140464bit: ami-396a415a
+    eu-central-1:
+      Ubuntu140464bit: ami-4bd03b24
+    eu-west-1:
+      Ubuntu140464bit: ami-02b62c71
+    eu-west-2:
+      Ubuntu140464bit: ami-63342007
+    us-east-1:
+      Ubuntu140464bit: ami-a9e2a9bf
+    us-east-2:
+      Ubuntu140464bit: ami-9f0627fa
+    us-west-1:
+      Ubuntu140464bit: ami-992661f9
+    us-west-2:
+      Ubuntu140464bit: ami-42569022
+    ca-central-1:
+      Ubuntu140464bit: ami-beea56da
+    sa-east-1:
+      Ubuntu140464bit: ami-8df695e1
+  AWSAnalyticsAMIRegionMap:
+    ap-northeast-1:
+      Ubuntu140464bit: ami-2e63924f
+    ap-northeast-2:
+      Ubuntu140464bit: ami-979258f9
+    ap-south-1:
+      Ubuntu140464bit: ami-4a90fa25
+    ap-southeast-1:
+      Ubuntu140464bit: ami-ea2bf989
+    ap-southeast-2:
+      Ubuntu140464bit: ami-396a415a
+    eu-central-1:
+      Ubuntu140464bit: ami-4bd03b24
+    eu-west-1:
+      Ubuntu140464bit: ami-02b62c71
+    eu-west-2:
+      Ubuntu140464bit: ami-63342007
+    us-east-1:
+      Ubuntu140464bit: ami-a9e2a9bf
+    us-east-2:
+      Ubuntu140464bit: ami-c53011a0
+    us-west-1:
+      Ubuntu140464bit: ami-992661f9
+    us-west-2:
+      Ubuntu140464bit: ami-42569022
+    ca-central-1:
+      Ubuntu140464bit: ami-beea56da
+    sa-east-1:
+      Ubuntu140464bit: ami-8df695e1
+  SubnetConfiguration:
+    VPC:
+      CIDR: 10.0.0.0/16
+    Public:
+      CIDR: 10.0.254.0/24
+    Private1:
+      CIDR: 10.0.1.0/24
+    Private2:
+      CIDR: 10.0.2.0/24
+Parameters:
+  KeyPairName:
+    Description: >-
+      The key pair to establish a SSH connection to the web servers. This should
+      be already created.
+    Type: 'AWS::EC2::KeyPair::KeyName'
+  CertificateName:
+    Description: A previously uploaded certificate to use at the Load Balancer Listeners.
+    Type: String
+    MinLength: 1
+  DBUsername:
+    Description: The username to be used in the WSO2 AM DB.
+    Type: String
+    Default: root
+    MinLength: 4
+    AllowedPattern: '[A-Za-z0-9\-]+'
+  DBPassword:
+    Description: The password to be used in the WSO2 AM DB.
+    Type: String
+    Default: rootrootroot
+    MinLength: 8
+    NoEcho: true
+#   PrimaryIPAddress:
+#     Type: String
+#     Description: Primary private IP. This must be a valid IP address for Subnet
+#     AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})'
+#     ConstraintDescription: must be a valid IP address of the form x.x.x.x.
+#   SecondaryIPAddress:
+#     Type: String
+#     Description: Secondary private IP. This ust be a valid IP address for Subnet
+#     AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})'
+#     ConstraintDescription: must be a valid IP address of the form x.x.x.x.

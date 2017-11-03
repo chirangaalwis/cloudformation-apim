@@ -1,0 +1,1445 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: Cluster Configuration
+        Parameters:
+          - InstanceType
+          - KeyName
+          - AWSAccessKeySecret
+      - Label:
+          default: Network Configuration
+        Parameters:
+          - CertificateName
+          - SSHLocation
+      - Label:
+          default: Database Configuration
+        Parameters:
+          - DBUsername
+          - DBPassword
+    ParameterLabels:
+      AWSAccessKeySecret:
+        default: AWS Access Secret Key
+      CertificateName:
+        default: Which certificate should be used at the Load Balancer for APIM?
+      DBUsername:
+        default: APIM Database Master username?
+      DBPassword:
+        default: APIM Database Master password
+Resources:
+  WSO2AM1SIMPLE1VPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+  PublicSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      CidrBlock: 10.0.254.0/24
+      AvailabilityZone: !Select
+        - '0'
+        - !GetAZs ''
+  PublicSubnet2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      CidrBlock: 10.0.252.0/24
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: !Select
+        - '1'
+        - !GetAZs ''
+  PublicInternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn:
+      - EC2VPCG1W38G
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      GatewayId: !Ref PublicInternetGateway
+      DestinationCidrBlock: 0.0.0.0/0
+  EC2SRTA4ALO8:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet
+  EC2SRTA21VEF:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet2
+  EC2VPCG1W38G:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: !Ref PublicInternetGateway
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+  PrivateSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select
+        - '0'
+        - !GetAZs ''
+  PrivateSubnet2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Select
+        - '1'
+        - !GetAZs ''
+  WSO2AMELB:
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    Properties:
+      CrossZone: true
+      SecurityGroups:
+        - !Ref ELBSecurityGroup
+      Subnets:
+        - !Ref PublicSubnet
+        - !Ref PublicSubnet2
+      LBCookieStickinessPolicy:
+        - PolicyName: LBStickyPolicy
+      Listeners:
+        - LoadBalancerPort: '80'
+          InstancePort: '80'
+          Protocol: HTTP
+          InstanceProtocol: HTTP
+        # - LoadBalancerPort: '9443'
+        #   InstancePort: '9443'
+        #   Protocol: HTTPS
+        #   InstanceProtocol: HTTPS
+        #   PolicyNames:
+        #     - LBStickyPolicy
+        #   SSLCertificateId: !Join
+        #     - ''
+        #     - - 'arn:aws:iam::'
+        #       - !Ref 'AWS::AccountId'
+        #       - ':server-certificate'
+        #       - /
+        #       - !Ref CertificateName
+        # - LoadBalancerPort: '8243'
+        #   InstancePort: '8243'
+        #   Protocol: HTTPS
+        #   InstanceProtocol: HTTPS
+        #   PolicyNames:
+        #     - LBStickyPolicy
+        #   SSLCertificateId: !Join
+        #     - ''
+        #     - - 'arn:aws:iam::'
+        #       - !Ref 'AWS::AccountId'
+        #       - ':server-certificate'
+        #       - /
+        #       - !Ref CertificateName
+#         - LoadBalancerPort: '9763'
+#           InstancePort: '9763'
+#           Protocol: HTTP
+#           InstanceProtocol: HTTP
+#           PolicyNames:
+#             - LBStickyPolicy
+        # - LoadBalancerPort: '10389'
+        #   InstancePort: '10389'
+        #   Protocol: TCP
+        #   InstanceProtocol: TCP
+        # - LoadBalancerPort: '8000'
+        #   InstancePort: '8000'
+        #   Protocol: TCP
+        #   InstanceProtocol: TCP
+        # - LoadBalancerPort: '5701'
+        #   InstancePort: '5701'
+        #   Protocol: TCP
+        #   InstanceProtocol: TCP
+        # - LoadBalancerPort: '5672'
+        #   InstancePort: '5672'
+        #   Protocol: TCP
+        #   InstanceProtocol: TCP
+        # - LoadBalancerPort: '9611'
+        #   InstancePort: '9611'
+        #   Protocol: TCP
+        #   InstanceProtocol: TCP
+        # - LoadBalancerPort: '9711'
+        #   InstancePort: '9711'
+        #   Protocol: TCP
+        #   InstanceProtocol: TCP
+        # - LoadBalancerPort: '10397'
+        #   InstancePort: '10397'
+        #   Protocol: TCP
+        #   InstanceProtocol: TCP
+      HealthCheck:
+          Target: 'HTTP:80/'
+          HealthyThreshold: '3'
+          UnhealthyThreshold: '5'
+          Interval: '10'
+          Timeout: '5'
+      Instances:
+        - !Ref WSInstanceOne
+        - !Ref WSInstanceTwo
+  ELBSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      GroupDescription: ELB Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: !Ref SSHLocation
+        # - IpProtocol: tcp
+        #   FromPort: '9443'
+        #   ToPort: '9443'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '8243'
+        #   ToPort: '8243'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '9763'
+        #   ToPort: '9763'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '10389'
+        #   ToPort: '10389'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '8000'
+        #   ToPort: '8000'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '5701'
+        #   ToPort: '5701'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '5672'
+        #   ToPort: '5672'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '9611'
+        #   ToPort: '9611'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '9711'
+        #   ToPort: '9711'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '10397'
+        #   ToPort: '10397'
+        #   CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '9443'
+        #   ToPort: '9443'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '8243'
+        #   ToPort: '8243'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '9763'
+        #   ToPort: '9763'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '10389'
+        #   ToPort: '10389'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '8000'
+        #   ToPort: '8000'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '5701'
+        #   ToPort: '5701'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '5672'
+        #   ToPort: '5672'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '9611'
+        #   ToPort: '9611'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '9711'
+        #   ToPort: '9711'
+        #   CidrIp: 0.0.0.0/0
+        # - IpProtocol: tcp
+        #   FromPort: '10397'
+        #   ToPort: '10397'
+        #   CidrIp: 0.0.0.0/0
+  ProductSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+      GroupDescription: Product Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '22'
+        #   ToPort: '22'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '2049'
+        #   ToPort: '2049'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '9443'
+        #   ToPort: '9443'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '5701'
+        #   ToPort: '5701'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '9763'
+        #   ToPort: '9763'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '8243'
+        #   ToPort: '8243'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '8280'
+        #   ToPort: '8280'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '443'
+        #   ToPort: '443'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '80'
+        #   ToPort: '80'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '3306'
+        #   ToPort: '3306'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: icmp
+        #   FromPort: '-1'
+        #   ToPort: '-1'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '3306'
+        #   ToPort: '3306'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '10389'
+        #   ToPort: '10389'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '8000'
+        #   ToPort: '8000'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '5701'
+        #   ToPort: '5701'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '5672'
+        #   ToPort: '5672'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '9611'
+        #   ToPort: '9611'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '9711'
+        #   ToPort: '9711'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '10397'
+        #   ToPort: '10397'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '7611'
+        #   ToPort: '7611'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+        # - IpProtocol: tcp
+        #   FromPort: '7711'
+        #   ToPort: '7711'
+        #   SourceSecurityGroupId: !Ref ELBSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: '0'
+          ToPort: '0'
+          CidrIp: 0.0.0.0/0
+#   WSO2AMLC:
+#     Type: 'AWS::AutoScaling::LaunchConfiguration'
+#     Properties:
+#       ImageId: !FindInMap
+#         - AWSAMIRegionMap
+#         - !Ref 'AWS::Region'
+#         - Ubuntu140464bit
+#       InstanceType: t2.medium
+#       BlockDeviceMappings:
+#         - DeviceName: /dev/sda1
+#           Ebs:
+#             VolumeSize: '20'
+#             VolumeType: gp2
+#             DeleteOnTermination: 'true'
+#       KeyName: !Ref KeyPairName
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#       UserData: !Base64
+#         'Fn::Join':
+#           - |+
+
+#           - - '#!/bin/bash'
+#             - set -e
+#             - mkdir -p /mnt/efs
+#             - !Join
+#               - ''
+#               - - echo "
+#                 - !Ref AMNFSMount
+#                 - .efs.
+#                 - !Ref 'AWS::Region'
+#                 - .amazonaws.com
+#                 - >-
+#                   :/ /mnt/efs nfs4
+#                   nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2
+#                   0 0" >> /etc/fstab
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_ELB_DNS_NAME/
+#                 - !GetAtt
+#                   - WSO2AMELB
+#                   - DNSName
+#                 - >-
+#                   /g"
+#                   /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-1/default.yaml
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_USERNAME/
+#                 - !Ref DBUsername
+#                 - /g" /etc/puppet/hieradata/dev/wso2/common.yaml
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_PASSWORD/
+#                 - !Ref DBPassword
+#                 - /g" /etc/puppet/hieradata/dev/wso2/common.yaml
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_RDS_URL/
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Address
+#                 - /g" /etc/puppet/hieradata/dev/wso2/common.yaml
+#             - mount -a -t nfs4
+#             - export DB_NAME=WSO2AM_DB
+#             - !Join
+#               - ''
+#               - - export DB_HOSTNAME=
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Address
+#             - !Join
+#               - ''
+#               - - export DB_PORT=
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Port
+#             - !Join
+#               - ''
+#               - - export DB_USERNAME=
+#                 - !Ref DBUsername
+#             - !Join
+#               - ''
+#               - - export DB_PASSWORD=
+#                 - !Ref DBPassword
+#             - echo "Waiting for Cluster lock..."
+#             - bash /usr/local/bin/acquire_lock.sh
+#             - export FACTER_product_name=wso2am_runtime
+#             - export FACTER_product_version=2.1.0
+#             - export FACTER_product_profile=default
+#             - export FACTER_vm_type=openstack
+#             - export FACTER_environment=dev
+#             - export FACTER_platform=default
+#             - export FACTER_use_hieradata=true
+#             - export FACTER_pattern=pattern-1
+#             - >-
+#               puppet apply -e "include wso2am_runtime"
+#               --modulepath=/etc/puppet/modules
+#               --hiera_config=/etc/puppet/hiera.yaml
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_USERNAME/
+#                 - !Ref DBUsername
+#                 - /g" /usr/local/bin/provision_db_apim.sh
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_PASSWORD/
+#                 - !Ref DBPassword
+#                 - /g" /usr/local/bin/provision_db_apim.sh
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_HOST/
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Address
+#                 - /g" /usr/local/bin/provision_db_apim.sh
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_PORT/
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Port
+#                 - /g" /usr/local/bin/provision_db_apim.sh
+#             - bash /usr/local/bin/provision_db_apim.sh
+#             - echo "Releasing lock..."
+#             - /usr/local/bin/sync_lock apim unlock
+#             - 'if [ ! -d "/mnt/efs/synapse-configs" ]; then'
+#             - '    mkdir -p /mnt/efs/synapse-configs'
+#             - '    cp -r /mnt/wso2am-2.1.0/repository/deployment/server/synapse-configs /mnt/efs/synapse-configs'
+#             - fi
+#             - >-
+#               rm -rf
+#               /mnt/wso2am-2.1.0/repository/deployment/server/synapse-configs
+#             - >-
+#               ln -s /mnt/efs/synapse-configs/synapse-configs
+#               /mnt/wso2am-2.1.0/repository/deployment/server/synapse-configs
+#             - apt-get --purge remove puppet mysql-client -y
+#             - rm -rf /etc/puppet
+#             - /mnt/wso2am-2.1.0/bin/wso2server.sh start
+#             - echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
+#             - cat /dev/null > ~/.bash_history && history -c
+#     DependsOn:
+#       - ProductSecurityGroup
+#       - WSO2AMELB
+#       - EC2VPCG1W38G
+#  WSO2AMASGroupSN1:
+#    Type: 'AWS::AutoScaling::AutoScalingGroup'
+#    Properties:
+#      LaunchConfigurationName: !Ref WSO2AMLCSN1
+#      DesiredCapacity: 1
+#      MinSize: 1
+#      MaxSize: 1
+#      LoadBalancerNames:
+#        - !Ref WSO2AMELB
+#        - !Ref WSO2AMELBThriftSN1
+#      VPCZoneIdentifier:
+#        - !Ref PublicSubnet
+#      Tags:
+#        - Key: Name
+#          Value: WSO2AM-Instance
+#          PropagateAtLaunch: 'true'
+#        - Key: Product
+#          Value: WSO2AM
+#          PropagateAtLaunch: 'true'
+#        - Key: Version
+#          Value: 2.1.0
+#          PropagateAtLaunch: 'true'
+#        - Key: Cluster
+#          Value: WSO2AM210SIMPLE
+#          PropagateAtLaunch: 'true'
+#    DependsOn:
+#      - WSO2AMLC
+#      - WSO2AMELB
+#    Metadata:
+#      'AWS::CloudFormation::Designer':
+#        id: 93b3c6a7-f22f-4e8c-8832-8aa5dd38d72d
+#  WSO2AMASGroupSN2:
+#    Type: 'AWS::AutoScaling::AutoScalingGroup'
+#    Properties:
+#      LaunchConfigurationName: !Ref WSO2AMLCSN2
+#      DesiredCapacity: 1
+#      MinSize: 1
+#      MaxSize: 1
+#      LoadBalancerNames:
+#        - !Ref WSO2AMELB
+#        - !Ref WSO2AMELBThriftSN2
+#      VPCZoneIdentifier:
+#        - !Ref PublicSubnet2
+#      Tags:
+#        - Key: Name
+#          Value: WSO2AM-Instance
+#          PropagateAtLaunch: 'true'
+#        - Key: Product
+#          Value: WSO2AM
+#          PropagateAtLaunch: 'true'
+#        - Key: Version
+#          Value: 2.1.0
+#          PropagateAtLaunch: 'true'
+#        - Key: Cluster
+#          Value: WSO2AM210SIMPLE
+#          PropagateAtLaunch: 'true'
+#    DependsOn:
+#      - WSO2AMLC
+#      - WSO2AMELB
+#    Metadata:
+#      'AWS::CloudFormation::Designer':
+#        id: d342cd60-ac6a-47de-a209-dbd7aaa8f1ce
+#   WSO2AMELBThriftSN1:
+#     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+#     Properties:
+#       CrossZone: true
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#       Subnets:
+#         - !Ref PublicSubnet
+#       Listeners:
+#         - LoadBalancerPort: '9611'
+#           InstancePort: '9611'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '9711'
+#           InstancePort: '9711'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#       HealthCheck:
+#         Target: 'TCP:9763'
+#         HealthyThreshold: '3'
+#         UnhealthyThreshold: '5'
+#         Interval: '10'
+#         Timeout: '5'
+#     DependsOn:
+#       - ProductSecurityGroup
+#   WSO2AMELBThriftSN2:
+#     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+#     Properties:
+#       CrossZone: true
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#       Subnets:
+#         - !Ref PublicSubnet2
+#       Listeners:
+#         - LoadBalancerPort: '9611'
+#           InstancePort: '9611'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '9711'
+#           InstancePort: '9711'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#       HealthCheck:
+#         Target: 'TCP:9763'
+#         HealthyThreshold: '3'
+#         UnhealthyThreshold: '5'
+#         Interval: '10'
+#         Timeout: '5'
+#     DependsOn:
+#       - ProductSecurityGroup
+#   WSO2AMDB:
+#     Type: 'AWS::RDS::DBInstance'
+#     Properties:
+#       VPCSecurityGroups:
+#         - !Ref ProductSecurityGroup
+#       DBInstanceClass: db.t2.medium
+#       AllocatedStorage: 5
+#       BackupRetentionPeriod: '0'
+#       DBInstanceIdentifier: wso2amdb
+#       DBName: WSO2AM_DB
+#       Engine: MySQL
+#       MasterUsername: !Ref DBUsername
+#       MasterUserPassword: !Ref DBPassword
+#       MultiAZ: 'false'
+#       StorageType: gp2
+#       DBSubnetGroupName: !Ref RDSDBSG412ZQ
+#   RDSDBSG412ZQ:
+#     Type: 'AWS::RDS::DBSubnetGroup'
+#     Properties:
+#       DBSubnetGroupDescription: DB Subnet Group
+#       SubnetIds:
+#         - !Ref PublicSubnet
+#         - !Ref PublicSubnet2
+#   AMNFSMount:
+#     Type: 'AWS::EFS::FileSystem'
+#     Properties: {}
+#   EFSMtSN1:
+#     Type: 'AWS::EFS::MountTarget'
+#     Properties:
+#       SubnetId: !Ref PublicSubnet
+#       FileSystemId: !Ref AMNFSMount
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#   EFSMtSN2:
+#     Type: 'AWS::EFS::MountTarget'
+#     Properties:
+#       SubnetId: !Ref PublicSubnet2
+#       FileSystemId: !Ref AMNFSMount
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#   WSO2AMAnalyticsASGSN1:
+#     Type: 'AWS::AutoScaling::AutoScalingGroup'
+#     Properties:
+#       LaunchConfigurationName: !Ref WSO2AMAnalyticsLC
+#       DesiredCapacity: 1
+#       MinSize: 1
+#       MaxSize: 1
+#       LoadBalancerNames:
+#         - !Ref WSO2AMAnalyticsELB
+#         - !Ref WSO2AMAnalyticsELBThriftSN1
+#       VPCZoneIdentifier:
+#         - !Ref PublicSubnet
+#       Tags:
+#         - Key: Name
+#           Value: WSO2AM-Analytics-Instance
+#           PropagateAtLaunch: 'true'
+#         - Key: Product
+#           Value: WSO2AM-Analytics
+#           PropagateAtLaunch: 'true'
+#         - Key: Version
+#           Value: 2.1.0
+#           PropagateAtLaunch: 'true'
+#         - Key: Cluster
+#           Value: WSO2AMAnalytics210SIMPLE
+#           PropagateAtLaunch: 'true'
+#     DependsOn:
+#       - WSO2AMAnalyticsLC
+#       - WSO2AMAnalyticsELB
+#   WSO2AMAnalyticsASGSN2:
+#     Type: 'AWS::AutoScaling::AutoScalingGroup'
+#     Properties:
+#       LaunchConfigurationName: !Ref WSO2AMAnalyticsLC
+#       DesiredCapacity: 1
+#       MinSize: 1
+#       MaxSize: 2
+#       LoadBalancerNames:
+#         - !Ref WSO2AMAnalyticsELB
+#         - !Ref WSO2AMAnalyticsELBThriftSN2
+#       VPCZoneIdentifier:
+#         - !Ref PublicSubnet2
+#       Tags:
+#         - Key: Name
+#           Value: WSO2AM-Analytics-Instance
+#           PropagateAtLaunch: 'true'
+#         - Key: Product
+#           Value: WSO2AM-Analytics
+#           PropagateAtLaunch: 'true'
+#         - Key: Version
+#           Value: 2.1.0
+#           PropagateAtLaunch: 'true'
+#         - Key: Cluster
+#           Value: WSO2AMAnalytics210SIMPLE
+#           PropagateAtLaunch: 'true'
+#     DependsOn:
+#       - WSO2AMAnalyticsLC
+#       - WSO2AMAnalyticsELB
+#   WSO2AMAnalyticsLC:
+#     Type: 'AWS::AutoScaling::LaunchConfiguration'
+#     Properties:
+#       ImageId: !FindInMap
+#         - AWSAnalyticsAMIRegionMap
+#         - !Ref 'AWS::Region'
+#         - Ubuntu140464bit
+#       InstanceType: t2.medium
+#       BlockDeviceMappings:
+#         - DeviceName: /dev/sda1
+#           Ebs:
+#             VolumeSize: '20'
+#             VolumeType: gp2
+#             DeleteOnTermination: 'true'
+#       KeyName: !Ref KeyPairName
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#       UserData: !Base64
+#         'Fn::Join':
+#           - |+
+
+#           - - '#!/bin/bash'
+#             - set -e
+#             - mkdir -p /mnt/efs
+#             - !Join
+#               - ''
+#               - - echo "
+#                 - !Ref AMNFSMount
+#                 - .efs.
+#                 - !Ref 'AWS::Region'
+#                 - .amazonaws.com
+#                 - >-
+#                   :/ /mnt/efs nfs4
+#                   nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2
+#                   0 0" >> /etc/fstab
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_ELB_DNS_NAME/
+#                 - !GetAtt
+#                   - WSO2AMELB
+#                   - DNSName
+#                 - >-
+#                   /g"
+#                   /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-1/default.yaml
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_USERNAME/
+#                 - !Ref DBUsername
+#                 - /g" /etc/puppet/hieradata/dev/wso2/common.yaml
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_PASSWORD/
+#                 - !Ref DBPassword
+#                 - /g" /etc/puppet/hieradata/dev/wso2/common.yaml
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_RDS_URL/
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Address
+#                 - /g" /etc/puppet/hieradata/dev/wso2/common.yaml
+#             - mount -a -t nfs4
+#             - export DB_NAME=WSO2AM_DB
+#             - !Join
+#               - ''
+#               - - export DB_HOSTNAME=
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Address
+#             - !Join
+#               - ''
+#               - - export DB_PORT=
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Port
+#             - !Join
+#               - ''
+#               - - export DB_USERNAME=
+#                 - !Ref DBUsername
+#             - !Join
+#               - ''
+#               - - export DB_PASSWORD=
+#                 - !Ref DBPassword
+#             - echo "Waiting for Cluster lock..."
+#             - bash /usr/local/bin/acquire_lock.sh
+#             - export FACTER_product_name=wso2am_runtime
+#             - export FACTER_product_version=2.1.0
+#             - export FACTER_product_profile=default
+#             - export FACTER_vm_type=openstack
+#             - export FACTER_environment=dev
+#             - export FACTER_platform=default
+#             - export FACTER_use_hieradata=true
+#             - export FACTER_pattern=pattern-1
+#             - >-
+#               puppet apply -e "include wso2am_runtime"
+#               --modulepath=/etc/puppet/modules
+#               --hiera_config=/etc/puppet/hiera.yaml
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_USERNAME/
+#                 - !Ref DBUsername
+#                 - /g" /usr/local/bin/provision_db_apim.sh
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_PASSWORD/
+#                 - !Ref DBPassword
+#                 - /g" /usr/local/bin/provision_db_apim.sh
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_HOST/
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Address
+#                 - /g" /usr/local/bin/provision_db_apim.sh
+#             - !Join
+#               - ''
+#               - - sed -i "s/CF_DB_PORT/
+#                 - !GetAtt
+#                   - WSO2AMDB
+#                   - Endpoint.Port
+#                 - /g" /usr/local/bin/provision_db_apim.sh
+#             - bash /usr/local/bin/provision_db_apim.sh
+#             - echo "Releasing lock..."
+#             - /usr/local/bin/sync_lock apim unlock
+#             - 'if [ ! -d "/mnt/efs/synapse-configs" ]; then'
+#             - '    mkdir -p /mnt/efs/synapse-configs'
+#             - '    cp -r /mnt/wso2am-2.1.0/repository/deployment/server/synapse-configs /mnt/efs/synapse-configs'
+#             - fi
+#             - >-
+#               rm -rf
+#               /mnt/wso2am-2.1.0/repository/deployment/server/synapse-configs
+#             - >-
+#               ln -s /mnt/efs/synapse-configs/synapse-configs
+#               /mnt/wso2am-2.1.0/repository/deployment/server/synapse-configs
+#             - apt-get --purge remove puppet mysql-client -y
+#             - rm -rf /etc/puppet
+#             - /mnt/wso2am-2.1.0/bin/wso2server.sh start
+#             - echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
+#             - cat /dev/null > ~/.bash_history && history -c
+#     DependsOn:
+#       - ProductSecurityGroup
+#       - WSO2AMAnalyticsELB
+#       - EC2VPCG1W38G
+#   WSO2AMAnalyticsELB:
+#     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+#     Properties:
+#       CrossZone: true
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#       Subnets:
+#         - !Ref PublicSubnet2
+#         - !Ref PublicSubnet
+#       LBCookieStickinessPolicy:
+#         - PolicyName: LBStickyPolicy
+#       Listeners:
+#         - LoadBalancerPort: '9443'
+#           InstancePort: '9443'
+#           Protocol: HTTPS
+#           InstanceProtocol: HTTPS
+#           PolicyNames:
+#             - LBStickyPolicy
+#           SSLCertificateId: !Join
+#             - ''
+#             - - 'arn:aws:iam::'
+#               - !Ref 'AWS::AccountId'
+#               - ':server-certificate'
+#               - /
+#               - !Ref CertificateName
+#         - LoadBalancerPort: '8243'
+#           InstancePort: '8243'
+#           Protocol: HTTPS
+#           InstanceProtocol: HTTPS
+#           PolicyNames:
+#             - LBStickyPolicy
+#           SSLCertificateId: !Join
+#             - ''
+#             - - 'arn:aws:iam::'
+#               - !Ref 'AWS::AccountId'
+#               - ':server-certificate'
+#               - /
+#               - !Ref CertificateName
+#         - LoadBalancerPort: '9763'
+#           InstancePort: '9763'
+#           Protocol: HTTP
+#           InstanceProtocol: HTTP
+#           PolicyNames:
+#             - LBStickyPolicy
+#         - LoadBalancerPort: '10389'
+#           InstancePort: '10389'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '8000'
+#           InstancePort: '8000'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '5701'
+#           InstancePort: '5701'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '5672'
+#           InstancePort: '5672'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '9611'
+#           InstancePort: '9611'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '9711'
+#           InstancePort: '9711'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '10397'
+#           InstancePort: '10397'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#       HealthCheck:
+#         Target: 'TCP:9763'
+#         HealthyThreshold: '3'
+#         UnhealthyThreshold: '5'
+#         Interval: '10'
+#         Timeout: '5'
+#     DependsOn:
+#       - ProductSecurityGroup
+#   WSO2AMAnalyticsELBThriftSN1:
+#     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+#     Properties:
+#       CrossZone: true
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#       Subnets:
+#         - !Ref PublicSubnet
+#       LBCookieStickinessPolicy:
+#         - PolicyName: LBStickyPolicy
+#       Listeners:
+#         - LoadBalancerPort: '7611'
+#           InstancePort: '7611'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '7711'
+#           InstancePort: '7711'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#       HealthCheck:
+#         Target: 'TCP:9763'
+#         HealthyThreshold: '3'
+#         UnhealthyThreshold: '5'
+#         Interval: '10'
+#         Timeout: '5'
+#     DependsOn:
+#       - ProductSecurityGroup
+#   WSO2AMAnalyticsELBThriftSN2:
+#     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+#     Properties:
+#       CrossZone: true
+#       SecurityGroups:
+#         - !Ref ProductSecurityGroup
+#       Subnets:
+#         - !Ref PublicSubnet2
+#       LBCookieStickinessPolicy:
+#         - PolicyName: LBStickyPolicy
+#       Listeners:
+#         - LoadBalancerPort: '7611'
+#           InstancePort: '7611'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#         - LoadBalancerPort: '7711'
+#           InstancePort: '7711'
+#           Protocol: TCP
+#           InstanceProtocol: TCP
+#       HealthCheck:
+#         Target: 'TCP:9763'
+#         HealthyThreshold: '3'
+#         UnhealthyThreshold: '5'
+#         Interval: '10'
+#         Timeout: '5'
+#     DependsOn:
+#       - ProductSecurityGroup
+  WSInstanceOne:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !FindInMap 
+        - AWSRegionArch2AMI
+        - !Ref 'AWS::Region'
+        - !FindInMap 
+          - AWSInstanceType2Arch
+          - !Ref InstanceType
+          - Arch
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - GroupSet:
+            - !Ref ProductSecurityGroup
+          AssociatePublicIpAddress: 'true'
+          DeviceIndex: '0'
+          DeleteOnTermination: 'true'
+          SubnetId: !Ref PrivateSubnet
+      UserData: !Base64 
+        'Fn::Join':
+          - ''
+          - - |
+              #!/bin/bash -xe
+            - |
+              yum update -y aws-cfn-bootstrap
+            - |
+              # Install the files and packages from the metadata
+            - '/opt/aws/bin/cfn-init -v '
+            - '         --stack '
+            - !Ref 'AWS::StackName'
+            - '         --resource WSInstanceOne '
+            - '         --configsets All '
+            - '         --region '
+            - !Ref 'AWS::Region'
+            - |+
+
+            - |
+              # Signal the status from cfn-init
+            - '/opt/aws/bin/cfn-signal -e $? '
+            - '         --stack '
+            - !Ref 'AWS::StackName'
+            - '         --resource WSInstanceOne '
+            - '         --region '
+            - !Ref 'AWS::Region'
+            - ''
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
+    Metadata:
+      'AWS::CloudFormation::Init':
+        configSets:
+          All:
+            - ConfigureSampleApp
+        ConfigureSampleApp:
+          packages:
+            yum:
+              httpd: []
+          files:
+            /var/www/html/index.html:
+              content: !Join 
+                - |+
+
+                - - >-
+                    <h1>Congratulations, you have successfully launched the AWS
+                    CloudFormation sample.</h1>
+              mode: '000644'
+              owner: root
+              group: root
+          services:
+            sysvinit:
+              httpd:
+                enabled: 'true'
+                ensureRunning: 'true'
+    DependsOn:
+      - PrivateRoute
+  WSInstanceTwo:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !FindInMap 
+        - AWSRegionArch2AMI
+        - !Ref 'AWS::Region'
+        - !FindInMap 
+          - AWSInstanceType2Arch
+          - !Ref InstanceType
+          - Arch
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - GroupSet:
+            - !Ref ProductSecurityGroup
+          AssociatePublicIpAddress: 'true'
+          DeviceIndex: '0'
+          DeleteOnTermination: 'true'
+          SubnetId: !Ref PrivateSubnet2
+      UserData: !Base64 
+        'Fn::Join':
+          - ''
+          - - |
+              #!/bin/bash -xe
+            - |
+              yum update -y aws-cfn-bootstrap
+            - |
+              # Install the files and packages from the metadata
+            - '/opt/aws/bin/cfn-init -v '
+            - '         --stack '
+            - !Ref 'AWS::StackName'
+            - '         --resource WSInstanceTwo '
+            - '         --configsets All '
+            - '         --region '
+            - !Ref 'AWS::Region'
+            - |+
+
+            - |
+              # Signal the status from cfn-init
+            - '/opt/aws/bin/cfn-signal -e $? '
+            - '         --stack '
+            - !Ref 'AWS::StackName'
+            - '         --resource WSInstanceTwo '
+            - '         --region '
+            - !Ref 'AWS::Region'
+            - ''
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
+    Metadata:
+      'AWS::CloudFormation::Init':
+        configSets:
+          All:
+            - ConfigureSampleApp
+        ConfigureSampleApp:
+          packages:
+            yum:
+              httpd: []
+          files:
+            /var/www/html/index.html:
+              content: !Join 
+                - |+
+
+                - - >-
+                    <h1>Congratulations, you have successfully launched the AWS
+                    CloudFormation sample.</h1>
+              mode: '000644'
+              owner: root
+              group: root
+          services:
+            sysvinit:
+              httpd:
+                enabled: 'true'
+                ensureRunning: 'true'
+    DependsOn:
+      - PrivateRoute
+#   WSSecurityGroup:
+#     Type: 'AWS::EC2::SecurityGroup'
+#     Properties:
+#       VpcId: !Ref WSO2AM1SIMPLE1VPC
+#       GroupDescription: Allow access from HTTP and SSH traffic
+#       SecurityGroupIngress:
+#         - IpProtocol: tcp
+#           FromPort: '80'
+#           ToPort: '80'
+#           CidrIp: 0.0.0.0/0
+#         - IpProtocol: tcp
+#           FromPort: '22'
+#           ToPort: '22'
+#           CidrIp: !Ref SSHLocation
+  PrivateSubnetRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref WSO2AM1SIMPLE1VPC
+  PrivateRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGateway
+      RouteTableId: !Ref PrivateSubnetRouteTable
+  PrivateSubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PrivateSubnetRouteTable
+      SubnetId: !Ref PrivateSubnet
+  PrivateSubnet2RouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PrivateSubnetRouteTable
+      SubnetId: !Ref PrivateSubnet2
+  NATGateway:
+    Type: 'AWS::EC2::NatGateway'
+    Properties:
+      AllocationId: !GetAtt 
+        - EIP
+        - AllocationId
+      SubnetId: !Ref PublicSubnet
+  EIP:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      Domain: vpc
+Parameters:
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t1.micro
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - m1.small
+      - m1.medium
+      - m1.large
+      - m1.xlarge
+      - m2.xlarge
+      - m2.2xlarge
+      - m2.4xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - c1.medium
+      - c1.xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - g2.2xlarge
+      - r3.large
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - i2.xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - d2.xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - hi1.4xlarge
+      - hs1.8xlarge
+      - cr1.8xlarge
+      - cc2.8xlarge
+      - cg1.4xlarge
+    ConstraintDescription: must be a valid EC2 instance type.
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance.
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+  CertificateName:
+    Description: A previously uploaded certificate to use at the Load Balancer Listeners.
+    Type: String
+    MinLength: 1
+  DBUsername:
+    Description: The username to be used in the WSO2 AM DB.
+    Type: String
+    Default: root
+    MinLength: 4
+    AllowedPattern: '[A-Za-z0-9\-]+'
+  DBPassword:
+    Description: The password to be used in the WSO2 AM DB.
+    Type: String
+    Default: rootrootroot
+    MinLength: 8
+    NoEcho: true
+  SSHLocation:
+    Description: ' The IP address range that can be used access the web server using SSH.'
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+Mappings:
+  AWSInstanceType2Arch:
+    t1.micro:
+      Arch: PV64
+    t2.micro:
+      Arch: HVM64
+    t2.small:
+      Arch: HVM64
+    t2.medium:
+      Arch: HVM64
+    m1.small:
+      Arch: PV64
+    m1.medium:
+      Arch: PV64
+    m1.large:
+      Arch: PV64
+    m1.xlarge:
+      Arch: PV64
+    m2.xlarge:
+      Arch: PV64
+    m2.2xlarge:
+      Arch: PV64
+    m2.4xlarge:
+      Arch: PV64
+    m3.medium:
+      Arch: HVM64
+    m3.large:
+      Arch: HVM64
+    m3.xlarge:
+      Arch: HVM64
+    m3.2xlarge:
+      Arch: HVM64
+    c1.medium:
+      Arch: PV64
+    c1.xlarge:
+      Arch: PV64
+    c3.large:
+      Arch: HVM64
+    c3.xlarge:
+      Arch: HVM64
+    c3.2xlarge:
+      Arch: HVM64
+    c3.4xlarge:
+      Arch: HVM64
+    c3.8xlarge:
+      Arch: HVM64
+    c4.large:
+      Arch: HVM64
+    c4.xlarge:
+      Arch: HVM64
+    c4.2xlarge:
+      Arch: HVM64
+    c4.4xlarge:
+      Arch: HVM64
+    c4.8xlarge:
+      Arch: HVM64
+    g2.2xlarge:
+      Arch: HVMG2
+    r3.large:
+      Arch: HVM64
+    r3.xlarge:
+      Arch: HVM64
+    r3.2xlarge:
+      Arch: HVM64
+    r3.4xlarge:
+      Arch: HVM64
+    r3.8xlarge:
+      Arch: HVM64
+    i2.xlarge:
+      Arch: HVM64
+    i2.2xlarge:
+      Arch: HVM64
+    i2.4xlarge:
+      Arch: HVM64
+    i2.8xlarge:
+      Arch: HVM64
+    d2.xlarge:
+      Arch: HVM64
+    d2.2xlarge:
+      Arch: HVM64
+    d2.4xlarge:
+      Arch: HVM64
+    d2.8xlarge:
+      Arch: HVM64
+    hi1.4xlarge:
+      Arch: HVM64
+    hs1.8xlarge:
+      Arch: HVM64
+    cr1.8xlarge:
+      Arch: HVM64
+    cc2.8xlarge:
+      Arch: HVM64
+  AWSRegionArch2AMI:
+    us-east-1:
+      PV64: ami-1ccae774
+      HVM64: ami-1ecae776
+      HVMG2: ami-8c6b40e4
+    us-west-2:
+      PV64: ami-ff527ecf
+      HVM64: ami-e7527ed7
+      HVMG2: ami-abbe919b
+    us-west-1:
+      PV64: ami-d514f291
+      HVM64: ami-d114f295
+      HVMG2: ami-f31ffeb7
+    eu-west-1:
+      PV64: ami-bf0897c8
+      HVM64: ami-a10897d6
+      HVMG2: ami-d5bc24a2
+    eu-central-1:
+      PV64: ami-ac221fb1
+      HVM64: ami-a8221fb5
+      HVMG2: ami-7cd2ef61
+    ap-northeast-1:
+      PV64: ami-27f90e27
+      HVM64: ami-cbf90ecb
+      HVMG2: ami-6318e863
+    ap-southeast-1:
+      PV64: ami-acd9e8fe
+      HVM64: ami-68d8e93a
+      HVMG2: ami-3807376a
+    ap-southeast-2:
+      PV64: ami-ff9cecc5
+      HVM64: ami-fd9cecc7
+      HVMG2: ami-89790ab3
+    sa-east-1:
+      PV64: ami-bb2890a6
+      HVM64: ami-b52890a8
+      HVMG2: NOT_SUPPORTED
+    cn-north-1:
+      PV64: ami-fa39abc3
+      HVM64: ami-f239abcb
+      HVMG2: NOT_SUPPORTED
+Outputs:
+  URLOne:
+    Value: !Join 
+      - ''
+      - - 'http://'
+        - !GetAtt 
+          - WSInstanceOne
+          - PublicIp
+    Description: Instance one URL
+  URLTwo:
+    Value: !Join 
+      - ''
+      - - 'http://'
+        - !GetAtt 
+          - WSInstanceTwo
+          - PublicIp
+    Description: Instance two URL
