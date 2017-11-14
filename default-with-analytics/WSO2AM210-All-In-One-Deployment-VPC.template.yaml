@@ -1,7 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  WSO2 API Manager deployment with WSO2 API Manager Analytics for AWS
-  Marketplace
+  WSO2 API Manager deployment with WSO2 API Manager Analytics for AWS Marketplace
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -9,7 +8,6 @@ Metadata:
           default: Cluster Configuration
         Parameters:
           - KeyPairName
-          - AWSAccessKeySecret
       - Label:
           default: Network Configuration
         Parameters:
@@ -20,8 +18,6 @@ Metadata:
           - DBUsername
           - DBPassword
     ParameterLabels:
-      AWSAccessKeySecret:
-        default: AWS Access Secret Key
       CertificateName:
         default: Which certificate should be used at the Load Balancer for APIM?
       DBUsername:
