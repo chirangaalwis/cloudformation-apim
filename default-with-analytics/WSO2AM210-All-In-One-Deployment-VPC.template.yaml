@@ -1103,7 +1103,7 @@ Resources:
               - 'sts:AssumeRole'
       Path: /
       Policies:
-        - PolicyName: all-ec2TODO
+        - PolicyName: all-ec2
           PolicyDocument:
             Statement:
               - Effect: Allow
