@@ -240,28 +240,6 @@ Resources:
           - - '#!/bin/bash'
             - set -e
             - 'export PATH=~/.local/bin:$PATH'
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ENI_ID/
-                - !Ref WSO2APIMNode1NetworkInterface
-                - /g" /usr/local/bin/allocate_ips.sh
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ALLOC_ID/
-                - !GetAtt 
-                  - WSO2APIMNode1EIP
-                  - AllocationId
-                - /g" /usr/local/bin/allocate_ips.sh
-            - >-
-              sed -i "s/CF_DEFAULT_GATEWAY/10.0.254.1/g"
-              /usr/local/bin/allocate_ips.sh
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ENI_PRIVATE_IP/
-                - !GetAtt 
-                  - WSO2APIMNode1NetworkInterface
-                  - PrimaryPrivateIpAddress
-                - /g" /usr/local/bin/allocate_ips.sh
             - mkdir -p ~/.aws
             - cat > ~/.aws/config << EOF
             - '[default]'
@@ -296,21 +274,19 @@ Resources:
             - !Join 
               - ''
               - - sed -i "s/CF_APIM_IP/
-                - !GetAtt 
-                  - WSO2APIMNode1NetworkInterface
-                  - PrimaryPrivateIpAddress
+                - 'localhost'
                 - >-
                   /g"
                   /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-2/default.yaml
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ANALYTICS_IP/
-                - !GetAtt 
-                  - WSO2APIMAnalyticsNode1NetworkInterface
-                  - PrimaryPrivateIpAddress
-                - >-
-                  /g"
-                  /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-2/default.yaml
+#            - !Join
+#              - ''
+#              - - sed -i "s/CF_ANALYTICS_IP/
+#                - !GetAtt
+#                  - WSO2APIMAnalyticsNode1NetworkInterface
+#                  - PrimaryPrivateIpAddress
+#                - >-
+#                  /g"
+#                  /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-2/default.yaml
             - !Join 
               - ''
               - - sed -i "s/CF_DB_USERNAME/
@@ -435,28 +411,6 @@ Resources:
           - - '#!/bin/bash'
             - set -e
             - 'export PATH=~/.local/bin:$PATH'
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ENI_ID/
-                - !Ref WSO2APIMNode2NetworkInterface
-                - /g" /usr/local/bin/allocate_ips.sh
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ALLOC_ID/
-                - !GetAtt 
-                  - WSO2APIMNode2EIP
-                  - AllocationId
-                - /g" /usr/local/bin/allocate_ips.sh
-            - >-
-              sed -i "s/CF_DEFAULT_GATEWAY/10.0.252.1/g"
-              /usr/local/bin/allocate_ips.sh
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ENI_PRIVATE_IP/
-                - !GetAtt 
-                  - WSO2APIMNode2NetworkInterface
-                  - PrimaryPrivateIpAddress
-                - /g" /usr/local/bin/allocate_ips.sh
             - mkdir -p ~/.aws
             - cat > ~/.aws/config << EOF
             - '[default]'
@@ -491,21 +445,19 @@ Resources:
             - !Join 
               - ''
               - - sed -i "s/CF_APIM_IP/
-                - !GetAtt 
-                  - WSO2APIMNode2NetworkInterface
-                  - PrimaryPrivateIpAddress
+                - 'localhost'
                 - >-
                   /g"
                   /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-2/default.yaml
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ANALYTICS_IP/
-                - !GetAtt 
-                  - WSO2APIMAnalyticsNode1NetworkInterface
-                  - PrimaryPrivateIpAddress
-                - >-
-                  /g"
-                  /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-2/default.yaml
+#            - !Join
+#              - ''
+#              - - sed -i "s/CF_ANALYTICS_IP/
+#                - !GetAtt
+#                  - WSO2APIMAnalyticsNode1NetworkInterface
+#                  - PrimaryPrivateIpAddress
+#                - >-
+#                  /g"
+#                  /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-2/default.yaml
             - !Join 
               - ''
               - - sed -i "s/CF_DB_USERNAME/
@@ -834,28 +786,6 @@ Resources:
           - - '#!/bin/bash'
             - set -e
             - 'export PATH=~/.local/bin:$PATH'
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ENI_ID/
-                - !Ref WSO2APIMAnalyticsNode1NetworkInterface
-                - /g" /usr/local/bin/allocate_ips.sh
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ALLOC_ID/
-                - !GetAtt 
-                  - WSO2APIMAnalyticsNode1EIP
-                  - AllocationId
-                - /g" /usr/local/bin/allocate_ips.sh
-            - >-
-              sed -i "s/CF_DEFAULT_GATEWAY/10.0.254.1/g"
-              /usr/local/bin/allocate_ips.sh
-            - !Join 
-              - ''
-              - - sed -i "s/CF_ENI_PRIVATE_IP/
-                - !GetAtt 
-                  - WSO2APIMAnalyticsNode1NetworkInterface
-                  - PrimaryPrivateIpAddress
-                - /g" /usr/local/bin/allocate_ips.sh
             - mkdir -p ~/.aws
             - cat > ~/.aws/config << EOF
             - '[default]'
@@ -1057,27 +987,6 @@ Resources:
         Timeout: '5'
     DependsOn:
       - WSO2APIMLoadBalancerSecurityGroup
-  WSO2APIMNode1NetworkInterface:
-    Type: 'AWS::EC2::NetworkInterface'
-    Properties:
-      Description: AM ENI for Node1
-      SubnetId: !Ref WSO2APIMPublicSubnet1
-      GroupSet:
-        - !Ref WSO2APIMSecurityGroup
-  WSO2APIMNode2NetworkInterface:
-    Type: 'AWS::EC2::NetworkInterface'
-    Properties:
-      Description: AM ENI for Node2
-      SubnetId: !Ref WSO2APIMPublicSubnet2
-      GroupSet:
-        - !Ref WSO2APIMSecurityGroup
-  WSO2APIMAnalyticsNode1NetworkInterface:
-    Type: 'AWS::EC2::NetworkInterface'
-    Properties:
-      Description: Analytics ENI for Node1
-      SubnetId: !Ref WSO2APIMPublicSubnet1
-      GroupSet:
-        - !Ref WSO2APIMAnalyticsSecurityGroup
   WSO2APIMAWSCLIInstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
@@ -1105,39 +1014,6 @@ Resources:
                 Action:
                   - 'ec2:*'
                 Resource: '*'
-  WSO2APIMNode1EIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-  WSO2APIMNode1EIPAssociation:
-    Type: 'AWS::EC2::EIPAssociation'
-    Properties:
-      AllocationId: !GetAtt
-        - WSO2APIMNode1EIP
-        - AllocationId
-      NetworkInterfaceId: !Ref WSO2APIMNode1NetworkInterface
-  WSO2APIMNode2EIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-  WSO2APIMNode2EIPAssociation:
-    Type: 'AWS::EC2::EIPAssociation'
-    Properties:
-      AllocationId: !GetAtt
-        - WSO2APIMNode2EIP
-        - AllocationId
-      NetworkInterfaceId: !Ref WSO2APIMNode2NetworkInterface
-  WSO2APIMAnalyticsNode1EIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-  WSO2APIMAnalyticsNode1EIPAssociation:
-    Type: 'AWS::EC2::EIPAssociation'
-    Properties:
-      AllocationId: !GetAtt
-        - WSO2APIMAnalyticsNode1EIP
-        - AllocationId
-      NetworkInterfaceId: !Ref WSO2APIMAnalyticsNode1NetworkInterface
 Outputs:
   Publisher:
     Value: !Join 
