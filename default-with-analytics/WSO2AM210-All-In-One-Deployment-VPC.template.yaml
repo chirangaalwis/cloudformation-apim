@@ -25,6 +25,7 @@ Metadata:
       DBPassword:
         default: APIM Database Master password
 Resources:
+  # networking environment configurations
   WSO2APIMVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
@@ -122,6 +123,7 @@ Resources:
     Type: 'AWS::EC2::EIP'
     Properties:
       Domain: vpc
+
   WSO2APIMDBInstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
