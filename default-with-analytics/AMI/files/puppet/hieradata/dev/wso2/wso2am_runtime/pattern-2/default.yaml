@@ -123,10 +123,10 @@ wso2::am_datasources:
       name: WSO2_AM_DB
       description: The datasource used for API Manager database
       driver_class_name: "%{hiera('wso2::datasources::mysql::driver_class_name')}"
-      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2AM_DB?autoReconnect=true
+      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2APIM_DB?autoReconnect=true
       username: "%{hiera('wso2::datasources::mysql::username')}"
       password: "%{hiera('wso2::datasources::mysql::password')}"
-      jndi_config: jdbc/WSO2AM_DB
+      jndi_config: jdbc/WSO2APIM_DB
       max_active: "%{hiera('wso2::datasources::common::max_active')}"
       max_wait: "%{hiera('wso2::datasources::common::max_wait')}"
       test_on_borrow: "%{hiera('wso2::datasources::common::test_on_borrow')}"
@@ -139,7 +139,7 @@ wso2::master_datasources:
       name: WSO2_MB_STORE_DB
       description: The datasource used for message broker database
       driver_class_name: "%{hiera('wso2::datasources::mysql::driver_class_name')}"
-      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2AM_DB?autoReconnect=true
+      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2APIM_DB?autoReconnect=true
       username: "%{hiera('wso2::datasources::mysql::username')}"
       password: "%{hiera('wso2::datasources::mysql::password')}"
       jndi_config: WSO2MBStoreDB
@@ -154,7 +154,7 @@ wso2::master_datasources:
       name: WSO2_CONFIG_DB
       description: The datasource used for config registry
       driver_class_name: "%{hiera('wso2::datasources::mysql::driver_class_name')}"
-      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2AM_DB?autoReconnect=true
+      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2APIM_DB?autoReconnect=true
       username: "%{hiera('wso2::datasources::mysql::username')}"
       password: "%{hiera('wso2::datasources::mysql::password')}"
       jndi_config: jdbc/WSO2_CONFIG_DB
@@ -169,7 +169,7 @@ wso2::master_datasources:
       name: WSO2_GOV_DB
       description: The datasource used for gov registry
       driver_class_name: "%{hiera('wso2::datasources::mysql::driver_class_name')}"
-      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2AM_DB?autoReconnect=true
+      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2APIM_DB?autoReconnect=true
       username: "%{hiera('wso2::datasources::mysql::username')}"
       password: "%{hiera('wso2::datasources::mysql::password')}"
       jndi_config: jdbc/WSO2_GOV_DB
@@ -184,7 +184,7 @@ wso2::master_datasources:
       name: WSO2_USER_DB
       description: The datasource is used for user mangement and userstore
       driver_class_name: "%{hiera('wso2::datasources::mysql::driver_class_name')}"
-      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2AM_DB?autoReconnect=true
+      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2APIM_DB?autoReconnect=true
       username: "%{hiera('wso2::datasources::mysql::username')}"
       password: "%{hiera('wso2::datasources::mysql::password')}"
       jndi_config: jdbc/WSO2_USER_DB
@@ -199,7 +199,7 @@ wso2::master_datasources:
       name: WSO2AM_STATS_DB
       description: The datasource is used for stats
       driver_class_name: "%{hiera('wso2::datasources::mysql::driver_class_name')}"
-      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2AM_DB?autoReconnect=true
+      url: jdbc:mysql://%{hiera('wso2::datasources::mysql::server_url')}:3306/WSO2APIM_DB?autoReconnect=true
       username: "%{hiera('wso2::datasources::mysql::username')}"
       password: "%{hiera('wso2::datasources::mysql::password')}"
       jndi_config: jdbc/WSO2AM_STATS_DB
