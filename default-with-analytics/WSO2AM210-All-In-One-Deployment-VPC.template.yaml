@@ -123,7 +123,6 @@ Resources:
     Type: 'AWS::EC2::EIP'
     Properties:
       Domain: vpc
-
   WSO2APIMDBInstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -139,6 +138,11 @@ Resources:
     Properties:
       VpcId: !Ref WSO2APIMVPC
       GroupDescription: EFS Security Group
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '2049'
+        ToPort: '2049'
+        CidrIp: 0.0.0.0/0
   WSO2APIMLoadBalancerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -755,23 +759,27 @@ Resources:
         - !Ref WSO2APIMPrivateSubnet2
   WSO2APIMEFSFileSystem:
     Type: 'AWS::EFS::FileSystem'
+    Properties:
+      PerformanceMode: generalPurpose
   WSO2APIMAnalyticsEFSFileSystem:
     Type: 'AWS::EFS::FileSystem'
-  WSO2APIMPrivateSubnetEFSMountTarget:
+    Properties:
+      PerformanceMode: generalPurpose
+  WSO2APIMPrivateSubnet1EFSMountTarget:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref WSO2APIMPrivateSubnet1
       FileSystemId: !Ref WSO2APIMEFSFileSystem
       SecurityGroups:
         - !Ref WSO2APIMEFSSecurityGroup
-  WSO2APIMPublicSubnetEFSMountTarget:
+  WSO2APIMPrivateSubnet2EFSMountTarget:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref WSO2APIMPrivateSubnet2
       FileSystemId: !Ref WSO2APIMEFSFileSystem
       SecurityGroups:
         - !Ref WSO2APIMEFSSecurityGroup
-  WSO2APIMAnalyticsEFSMountTarget:
+  WSO2APIMAnalyticsPrivateSubnet1EFSMountTarget:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref WSO2APIMPrivateSubnet1
