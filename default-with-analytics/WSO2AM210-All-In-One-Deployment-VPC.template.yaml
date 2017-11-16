@@ -203,18 +203,21 @@ Resources:
       GroupDescription: WSO2 API Manager Analytics Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '7612'
-          ToPort: '7612'
-          SourceSecurityGroupId: !Ref WSO2APIMLoadBalancerSecurityGroup
+          FromPort: '9763'
+          ToPort: '9763'
+          SourceSecurityGroupId: !Ref WSO2APIMAnalyticsLoadBalancerSecurityGroup
         - IpProtocol: tcp
-          FromPort: '7712'
-          ToPort: '7712'
-          SourceSecurityGroupId: !Ref WSO2APIMLoadBalancerSecurityGroup
-      SecurityGroupEgress:
+          FromPort: '9443'
+          ToPort: '9443'
+          SourceSecurityGroupId: !Ref WSO2APIMAnalyticsLoadBalancerSecurityGroup
         - IpProtocol: tcp
-          FromPort: '3306'
-          ToPort: '3306'
-          CidrIp: 0.0.0.0/0
+          FromPort: '7711'
+          ToPort: '7711'
+          SourceSecurityGroupId: !Ref WSO2APIMSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '7611'
+          ToPort: '7611'
+          SourceSecurityGroupId: !Ref WSO2APIMSecurityGroup
   WSO2APIMNode1LaunchConfiguration:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
     Properties:
@@ -254,7 +257,7 @@ Resources:
             - !Join 
               - ''
               - - echo "
-                - !Ref WSO2APIMEFSFileSystem
+                - !Ref WSO2APIMEFS
                 - .efs.
                 - !Ref 'AWS::Region'
                 - .amazonaws.com
@@ -386,6 +389,68 @@ Resources:
       - WSO2APIMSecurityGroup
       - WSO2APIMLoadBalancer
       - WSO2APIMVPCInternetGatewayAttachment
+  WSO2APIMAnalyticsLoadBalancerSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2APIMVPC
+      GroupDescription: WSO2 APIM Analytics ELB Security Group
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: '9763'
+          ToPort: '9763'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          CidrIp: 0.0.0.0/0
+  WSO2APIMAnalyticsLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    Properties:
+      CrossZone: true
+      SecurityGroups:
+        - !Ref WSO2APIMAnalyticsLoadBalancerSecurityGroup
+      Subnets:
+        - !Ref WSO2APIMPublicSubnet1
+        - !Ref WSO2APIMPublicSubnet2
+      LBCookieStickinessPolicy:
+        - PolicyName: LBStickyPolicy
+      Listeners:
+        - LoadBalancerPort: '9763'
+          InstancePort: '9763'
+          Protocol: HTTP
+          InstanceProtocol: HTTP
+          PolicyNames:
+            - LBStickyPolicy
+        - LoadBalancerPort: '9443'
+          InstancePort: '9443'
+          Protocol: HTTPS
+          InstanceProtocol: HTTPS
+          PolicyNames:
+            - LBStickyPolicy
+          SSLCertificateId: !Join
+            - ''
+            - - 'arn:aws:iam::'
+              - !Ref 'AWS::AccountId'
+              - ':server-certificate'
+              - /
+              - !Ref CertificateName
+      HealthCheck:
+          Target: 'TCP:9763'
+          HealthyThreshold: '3'
+          UnhealthyThreshold: '5'
+          Interval: '10'
+          Timeout: '5'
+    DependsOn:
+      - WSO2APIMAnalyticsLoadBalancerSecurityGroup
   WSO2APIMNode2LaunchConfiguration:
     Type: 'AWS::AutoScaling::LaunchConfiguration'
     Properties:
@@ -425,7 +490,7 @@ Resources:
             - !Join 
               - ''
               - - echo "
-                - !Ref WSO2APIMEFSFileSystem
+                - !Ref WSO2APIMEFS
                 - .efs.
                 - !Ref 'AWS::Region'
                 - .amazonaws.com
@@ -620,8 +685,8 @@ Resources:
       SecurityGroups:
         - !Ref WSO2APIMLoadBalancerSecurityGroup
       Subnets:
-        - !Ref WSO2APIMPublicSubnet2
         - !Ref WSO2APIMPublicSubnet1
+        - !Ref WSO2APIMPublicSubnet2
       LBCookieStickinessPolicy:
         - PolicyName: LBStickyPolicy
       Listeners:
@@ -704,11 +769,11 @@ Resources:
       SubnetIds:
         - !Ref WSO2APIMPrivateSubnet1
         - !Ref WSO2APIMPrivateSubnet2
-  WSO2APIMEFSFileSystem:
+  WSO2APIMEFS:
     Type: 'AWS::EFS::FileSystem'
     Properties:
       PerformanceMode: generalPurpose
-  WSO2APIMAnalyticsEFSFileSystem:
+  WSO2APIMAnalyticsEFS:
     Type: 'AWS::EFS::FileSystem'
     Properties:
       PerformanceMode: generalPurpose
@@ -716,21 +781,21 @@ Resources:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref WSO2APIMPrivateSubnet1
-      FileSystemId: !Ref WSO2APIMEFSFileSystem
+      FileSystemId: !Ref WSO2APIMEFS
       SecurityGroups:
         - !Ref WSO2APIMEFSSecurityGroup
   WSO2APIMPrivateSubnet2EFSMountTarget:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref WSO2APIMPrivateSubnet2
-      FileSystemId: !Ref WSO2APIMEFSFileSystem
+      FileSystemId: !Ref WSO2APIMEFS
       SecurityGroups:
         - !Ref WSO2APIMEFSSecurityGroup
   WSO2APIMAnalyticsPrivateSubnet1EFSMountTarget:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref WSO2APIMPrivateSubnet1
-      FileSystemId: !Ref WSO2APIMAnalyticsEFSFileSystem
+      FileSystemId: !Ref WSO2APIMAnalyticsEFS
       SecurityGroups:
         - !Ref WSO2APIMEFSSecurityGroup
   WSO2APIMAnalyticsAutoScalingGroup:
@@ -800,7 +865,7 @@ Resources:
             - !Join 
               - ''
               - - echo "
-                - !Ref WSO2APIMAnalyticsEFSFileSystem
+                - !Ref WSO2APIMAnalyticsEFS
                 - .efs.
                 - !Ref 'AWS::Region'
                 - .amazonaws.com
@@ -915,78 +980,6 @@ Resources:
       - WSO2APIMAnalyticsSecurityGroup
       - WSO2APIMAnalyticsLoadBalancer
       - WSO2APIMVPCInternetGatewayAttachment
-  WSO2APIMAnalyticsLoadBalancer:
-    Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
-    Properties:
-      CrossZone: true
-      SecurityGroups:
-        - !Ref WSO2APIMLoadBalancerSecurityGroup
-      Subnets:
-        - !Ref WSO2APIMPublicSubnet2
-        - !Ref WSO2APIMPublicSubnet1
-      LBCookieStickinessPolicy:
-        - PolicyName: LBStickyPolicy
-      Listeners:
-        - LoadBalancerPort: '9443'
-          InstancePort: '9443'
-          Protocol: HTTPS
-          InstanceProtocol: HTTPS
-          PolicyNames:
-            - LBStickyPolicy
-          SSLCertificateId: !Join
-            - ''
-            - - 'arn:aws:iam::'
-              - !Ref 'AWS::AccountId'
-              - ':server-certificate'
-              - /
-              - !Ref CertificateName
-        - LoadBalancerPort: '8243'
-          InstancePort: '8243'
-          Protocol: HTTPS
-          InstanceProtocol: HTTPS
-          PolicyNames:
-            - LBStickyPolicy
-          SSLCertificateId: !Join
-            - ''
-            - - 'arn:aws:iam::'
-              - !Ref 'AWS::AccountId'
-              - ':server-certificate'
-              - /
-              - !Ref CertificateName
-        - LoadBalancerPort: '9763'
-          InstancePort: '9763'
-          Protocol: HTTP
-          InstanceProtocol: HTTP
-          PolicyNames:
-            - LBStickyPolicy
-        - LoadBalancerPort: '10389'
-          InstancePort: '10389'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '8000'
-          InstancePort: '8000'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '5701'
-          InstancePort: '5701'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '5672'
-          InstancePort: '5672'
-          Protocol: TCP
-          InstanceProtocol: TCP
-        - LoadBalancerPort: '10397'
-          InstancePort: '10397'
-          Protocol: TCP
-          InstanceProtocol: TCP
-      HealthCheck:
-        Target: 'TCP:9763'
-        HealthyThreshold: '3'
-        UnhealthyThreshold: '5'
-        Interval: '10'
-        Timeout: '5'
-    DependsOn:
-      - WSO2APIMLoadBalancerSecurityGroup
   WSO2APIMAWSCLIInstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
     Properties:
