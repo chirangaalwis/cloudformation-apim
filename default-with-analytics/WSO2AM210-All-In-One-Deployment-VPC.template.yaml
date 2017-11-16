@@ -229,10 +229,6 @@ Resources:
       GroupDescription: WSO2 API Manager Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          SourceSecurityGroupId: !Ref BastionSecurityGroup
-        - IpProtocol: tcp
           FromPort: '9763'
           ToPort: '9763'
           SourceSecurityGroupId: !Ref WSO2APIMLoadBalancerSecurityGroup
@@ -620,10 +616,6 @@ Resources:
       GroupDescription: WSO2 API Manager Analytics Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          SourceSecurityGroupId: !Ref BastionSecurityGroup
-        - IpProtocol: tcp
           FromPort: '9763'
           ToPort: '9763'
           SourceSecurityGroupId: !Ref WSO2APIMAnalyticsLoadBalancerSecurityGroup
@@ -942,44 +934,6 @@ Resources:
     DependsOn:
       - WSO2APIMAnalyticsLoadBalancerSecurityGroup
 
-  BastionSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: Bastion Security Group
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '22'
-          ToPort: '22'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: ICMP
-          FromPort: '-1'
-          ToPort: '-1'
-          CidrIp: 0.0.0.0/0
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          FromPort: '0'
-          ToPort: '0'
-          CidrIp: 0.0.0.0/0
-      VpcId: !Ref WSO2APIMVPC
-  BastionInstance:
-    Type: 'AWS::EC2::Instance'
-    Properties:
-      SecurityGroupIds:
-        - !Ref BastionSecurityGroup
-      ImageId: !FindInMap
-        - AmazonLinuxAMIRegionMap
-        - !Ref 'AWS::Region'
-        - AmazonLinux
-      KeyName: !Ref KeyPairName
-      SubnetId: !Ref WSO2APIMPublicSubnet1
-      InstanceType: t2.micro
-      Tags:
-        - Key: Name
-          Value: WSO2AM-Bastion
-        - Key: Product
-          Value: Bastion
-    DependsOn:
-      - BastionSecurityGroup
 Outputs:
   APIMServicePublisherURL:
     Value: !Join
@@ -1097,12 +1051,3 @@ Mappings:
       Ubuntu140464bit: ami-to-be-added
     sa-east-1:
       Ubuntu140464bit: ami-to-be-added
-  AmazonLinuxAMIRegionMap:
-    us-east-1:
-      AmazonLinux: ami-157b2102
-    us-east-2:
-      AmazonLinux: ami-73257f16
-    us-west-1:
-      AmazonLinux: ami-7a165c1a
-    us-west-2:
-      AmazonLinux: ami-0d58fe6d
