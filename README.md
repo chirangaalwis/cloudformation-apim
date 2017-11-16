@@ -1,8 +1,10 @@
-# WSO2 API Manager CloudFormation Templates
+# WSO2 API Manager AWS CloudFormation Template
 
-This repository contains CloudFormation templates for deploying WSO2 API Manager on AWS.
+This repository contains the AWS CloudFormation template for deploying WSO2 API Manager on AWS.
 
-##Steps to follow
+In this deployment, WSO2 API Manager [pattern 1](https://docs.wso2.com/display/AM210/Deployment+Patterns#DeploymentPatterns-Pattern1) will be used.
+
+## Steps to follow
 
 1. Go to AWS Management Console.
 
@@ -10,7 +12,7 @@ This repository contains CloudFormation templates for deploying WSO2 API Manager
 
 3. Choose to Create new stack.
 
-4. Under Select Template tab, go to Choose a template and choose Upload a template to Amazon S3 option. Then choose a new template file from your local filesystem.
+4. Under Select Template tab, go to Choose a template and choose to Upload a template to Amazon S3 option. Then choose a new template file from your local filesystem.
 
 5. Select Next, after choosing the template file.
 
@@ -40,8 +42,4 @@ This repository contains CloudFormation templates for deploying WSO2 API Manager
 
 ![Options](images/page-3.png)
 
-11. Choose option 'I acknowledge that AWS CloudFormation might create IAM resources with custom names.', at the bottom.
-
-12. Choose to Create.
-
-![Create stack](images/page-4.png)
+11. Select Create.
