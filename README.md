@@ -33,7 +33,7 @@ Please see [this](https://www.packer.io/docs/builders/amazon-ebs.html) Packer bu
 
 5. Select **Next**, after choosing the template file.
 
-![Select template](images/page-1.png)
+![Select template](quickstart/images/page-1.png)
 
 6. Enter a desired **Stack name**.
 
@@ -51,29 +51,29 @@ Please see [this](https://www.packer.io/docs/builders/amazon-ebs.html) Packer bu
     
 8. Select **Next**.
 
-![Specify details](images/page-2.png)
+![Specify details](quickstart/images/page-2.png)
 
 9. [Optional] Enter tag(s), if desired.
 
 10. Select **Next**.
 
-![Options](images/page-3.png)
+![Options](quickstart/images/page-3.png)
 
 11. Choose to **Create**.
 
 You will be able to see the progress of resource creation using **Events** tab.
 
-![Events](images/events.png)
+![Events](quickstart/images/events.png)
 
 ### Verify the deployment
 
 1. You can confirm whether the stack was created successfully by checking the **Status**.
 
-![Successful stack](images/output-1.png)
+![Successful stack](quickstart/images/output-1.png)
 
 2. Check the output of the deployment using the **Outputs** tab.
 
-![Outputs](images/output-2.png)
+![Outputs](quickstart/images/output-2.png)
 
 This tab contains URLs to WSO2 API Manager service store and publisher and an URL to WSO2 API Manager Analytics Management Console.
 
