@@ -14,8 +14,11 @@ echo "Installing packages..."
 wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb
 dpkg -i puppetlabs-release-trusty.deb
 apt-get update
-apt-get install -y unzip zip cron-apt nfs-common puppet facter mysql-client python python-pip
+apt-get install -y unzip zip cron-apt nfs-common puppet facter mysql-client python-pip python3-pip
+
 pip install --upgrade --user awscli
+echo "Installing Boto3 AWS SDK for Python3..."
+pip3 install boto3
 
 echo "Mounting block device..."
 mkfs.ext4 /dev/xvdf

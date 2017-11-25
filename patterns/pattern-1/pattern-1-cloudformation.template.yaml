@@ -279,8 +279,6 @@ Resources:
             - output = text
             - EOF
             - mkdir -p /mnt/efs
-            - apt-get update
-            - apt-get install -y nfs-common
             - !Sub "mount -t nfs4 -o nfsvers=4.1 ${WSO2APIMEFSFileSystem}.efs.${AWS::Region}.amazonaws.com:/ /mnt/efs"
             - !Join
               - ''
@@ -298,8 +296,6 @@ Resources:
                 - >-
                   /g"
                   /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-2/default.yaml
-            - apt-get install -y python3-pip
-            - pip3 install boto3
             - !Sub "PRIVATE_IP=$(python3 /usr/local/bin/private_ip_extractor.py ${AWS::Region} ${AWSAccessKeyId} ${AWSAccessKeySecret} WSO2APIMAnalyticsInstance)"
             - !Join
               - ''
@@ -463,8 +459,6 @@ Resources:
             - output = text
             - EOF
             - mkdir -p /mnt/efs
-            - apt-get update
-            - apt-get install -y nfs-common
             - !Sub "mount -t nfs4 -o nfsvers=4.1 ${WSO2APIMEFSFileSystem}.efs.${AWS::Region}.amazonaws.com:/ /mnt/efs"
             - !Join
               - ''
@@ -482,8 +476,6 @@ Resources:
                 - >-
                   /g"
                   /etc/puppet/hieradata/dev/wso2/wso2am_runtime/pattern-2/default.yaml
-            - apt-get install -y python3-pip
-            - pip3 install boto3
             - !Sub "PRIVATE_IP=$(python3 /usr/local/bin/private_ip_extractor.py ${AWS::Region} ${AWSAccessKeyId} ${AWSAccessKeySecret} WSO2APIMAnalyticsInstance)"
             - !Join
               - ''
@@ -669,8 +661,6 @@ Resources:
             - output = text
             - EOF
             - mkdir -p /mnt/efs
-            - apt-get update
-            - apt-get install -y nfs-common
             - !Sub "mount -t nfs4 -o nfsvers=4.1 ${WSO2APIMAnalyticsEFSFileSystem}.efs.${AWS::Region}.amazonaws.com:/ /mnt/efs"
             - !Join
               - ''
@@ -1018,7 +1008,7 @@ Mappings:
     us-east-1:
       Ubuntu140464bit: ami-c0a02eba
     us-east-2:
-      Ubuntu140464bit: ami-53113f36
+      Ubuntu140464bit: ami-1fbe907a
     us-west-1:
       Ubuntu140464bit: ami-53281033
     us-west-2:
@@ -1047,7 +1037,7 @@ Mappings:
     us-east-1:
       Ubuntu140464bit: ami-08be3072
     us-east-2:
-      Ubuntu140464bit: ami-68efc10d
+      Ubuntu140464bit: ami-08a18f6d
     us-west-1:
       Ubuntu140464bit: ami-b32911d3
     us-west-2:
